@@ -31,6 +31,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         item.menu = menu
 
         statusItem = item
+
+        // The status item alone is too easy to miss: on a Mac with a notch or a busy menu
+        // bar, macOS silently pushes new items into an overflow area. Opening the rules
+        // window on launch makes the app's actual UI unmissable, rather than depending on
+        // the user finding an icon that may not be visible at all.
+        showRules()
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
@@ -44,7 +50,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
 
-        guard let view = RuleEditorLoader.makeView() else { return }
+        guard let view = RuleEditorLoader.makeView() else {
+            let alert = NSAlert()
+            alert.messageText = "Could not load rules"
+            alert.informativeText = "ruleset.json is missing from the app bundle or could not be parsed."
+            alert.alertStyle = .warning
+            alert.runModal()
+            return
+        }
 
         let window = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 420, height: 320),
