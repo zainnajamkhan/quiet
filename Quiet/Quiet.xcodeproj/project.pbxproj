@@ -185,6 +185,8 @@
 		};
 		AC298F85304DE9B7003A0093 /* macOS (App) */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = "macOS (App)";
 			sourceTree = "<group>";
 		};
@@ -403,8 +405,8 @@
 			mainGroup = AC298F55304DE9B6003A0093;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "../Packages/QuietCore" */,
-				722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "../Packages/IndieKit" */,
+				EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "QuietCore" */,
+				722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "IndieKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AC298F73304DE9B7003A0093 /* Products */;
@@ -500,6 +502,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CU82DCKHTL;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Quiet Extension";
@@ -533,6 +536,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CU82DCKHTL;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Quiet Extension";
@@ -648,6 +652,7 @@
 		AC298FC9304DE9B7003A0093 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Entitlements/QuietExtension-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CU82DCKHTL;
@@ -684,6 +689,7 @@
 		AC298FCA304DE9B7003A0093 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Entitlements/QuietExtension-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CU82DCKHTL;
@@ -722,6 +728,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Entitlements/Quiet-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CU82DCKHTL;
@@ -763,6 +770,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Entitlements/Quiet-macOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CU82DCKHTL;
@@ -964,11 +972,11 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "../Packages/IndieKit" */ = {
+		722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "IndieKit" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Packages/IndieKit;
 		};
-		EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "../Packages/QuietCore" */ = {
+		EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "QuietCore" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Packages/QuietCore;
 		};
@@ -977,32 +985,32 @@
 /* Begin XCSwiftPackageProductDependency section */
 		0D5E79A5B360742653F5EA79 /* IndieKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "../Packages/IndieKit" */;
+			package = 722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "IndieKit" */;
 			productName = IndieKit;
 		};
 		10B6406459E92325CB4FF157 /* QuietCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "../Packages/QuietCore" */;
+			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "QuietCore" */;
 			productName = QuietCore;
 		};
 		9704EE3B4D2426EE434FE056 /* QuietCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "../Packages/QuietCore" */;
+			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "QuietCore" */;
 			productName = QuietCore;
 		};
 		A986A9D5AB4046F6F7BBE3A7 /* IndieKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "../Packages/IndieKit" */;
+			package = 722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "IndieKit" */;
 			productName = IndieKit;
 		};
 		ECECF32D9AA2D828697A1867 /* QuietCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "../Packages/QuietCore" */;
+			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "QuietCore" */;
 			productName = QuietCore;
 		};
 		F03D0E6621DE3C5E2B94F2AC /* QuietCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "../Packages/QuietCore" */;
+			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "QuietCore" */;
 			productName = QuietCore;
 		};
 /* End XCSwiftPackageProductDependency section */

@@ -8,19 +8,43 @@
 
 import Foundation
 
-/// Reads and writes SharedState to a plain file, readable by both the container app and
-/// the extension's native handler since neither currently has App Sandbox turned on.
+/// Reads and writes SharedState to a location both the container app and the Safari
+/// extension can reach.
 ///
-/// This is a deliberate, temporary shortcut: Mac App Store submission requires sandboxing,
-/// at which point this must move to an App Group shared container instead (a sandboxed
-/// process cannot read an arbitrary path like this one). Tracked as an open item in
-/// mac-apps/01-quiet.md. Do not build anything else on top of the exact file path; go
-/// through this type so the migration is a one file change.
+/// Both processes are sandboxed (Xcode injects `com.apple.security.app-sandbox` for a
+/// macOS app and its app extension even when no entitlements file is set), and each gets
+/// its own isolated container, so a plain path under Application Support resolves to two
+/// different files that can never see each other. The App Group container is the only
+/// shared writable location available to both.
 public enum SharedStateStore {
 
+    public static let appGroupIdentifier = "CU82DCKHTL.group.com.app.Quiet"
+
+    /// Falls back to the per process Application Support directory if the App Group
+    /// container is unavailable. That fallback is deliberately non fatal but it does mean
+    /// the app and extension stop sharing state, so `isUsingAppGroup` exists to make the
+    /// degraded case visible rather than silent.
     public static func fileURL() -> URL {
+        if let container = FileManager.default.containerURL(
+            forSecurityApplicationGroupIdentifier: appGroupIdentifier
+        ) {
+            return container.appendingPathComponent("shared-state.json")
+        }
         let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
         return base.appendingPathComponent("Quiet", isDirectory: true).appendingPathComponent("shared-state.json")
+    }
+
+    public static var isUsingAppGroup: Bool {
+        FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier) != nil
+    }
+
+    /// Human readable description of where state is actually being stored, for surfacing
+    /// in the UI. If this reports the fallback, the app and the extension are writing to
+    /// separate sandbox containers and toggles will appear to do nothing.
+    public static var storageDescription: String {
+        isUsingAppGroup
+            ? "Shared via App Group (app and extension can see each other)"
+            : "NOT SHARED: App Group unavailable, so the extension cannot see these settings"
     }
 
     public static func load(from url: URL = fileURL()) -> SharedState {

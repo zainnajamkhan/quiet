@@ -20,6 +20,13 @@ struct RuleEditorView: View {
 
     var body: some View {
         List {
+            if !SharedStateStore.isUsingAppGroup {
+                Section {
+                    Label(SharedStateStore.storageDescription, systemImage: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.orange)
+                        .font(.callout)
+                }
+            }
             ForEach(ruleset.sites) { site in
                 Section(site.name) {
                     ForEach(site.features) { feature in

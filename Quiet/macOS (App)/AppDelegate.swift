@@ -7,6 +7,7 @@
 
 import Cocoa
 import SwiftUI
+import QuietCore
 
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -31,6 +32,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         item.menu = menu
 
         statusItem = item
+
 
         // The status item alone is too easy to miss: on a Mac with a notch or a busy menu
         // bar, macOS silently pushes new items into an overflow area. Opening the rules
