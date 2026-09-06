@@ -1,40 +1,18 @@
 {
   "schemaVersion": 1,
-  "rulesetVersion": 4,
+  "rulesetVersion": 1,
   "updatedAt": "2026-09-06T00:00:00Z",
   "sites": [
     {
-      "id": "example",
-      "name": "Example",
-      "matches": ["*://*.example.com/*"],
+      "id": "youtube-demo",
+      "name": "YouTube (temporary demo)",
+      "matches": ["*://*.youtube.com/*"],
       "features": [
         {
-          "id": "example.feed",
-          "name": "Home feed",
-          "summary": "The grid of recommended items on the home page",
+          "id": "youtube-demo.comments",
+          "name": "Hide comments (temporary, to prove the pipeline works)",
           "defaultEnabled": true,
-          "appliesTo": ["/", "/?*"],
-          "hide": ["#feed", "main > .feed-item"],
-          "verify": ["main"]
-        },
-        {
-          "id": "example.comments",
-          "name": "Comments",
-          "defaultEnabled": false,
           "hide": ["#comments"]
-        }
-      ]
-    },
-    {
-      "id": "other",
-      "name": "Other",
-      "matches": ["https://other.test/*"],
-      "features": [
-        {
-          "id": "other.sidebar",
-          "name": "Sidebar",
-          "defaultEnabled": true,
-          "hide": [".sidebar"]
         }
       ]
     }
