@@ -12,5 +12,9 @@ echo "==> JavaScript engines"
 node --test Extension/tests/rules-engine.test.js Extension/tests/schedule-engine.test.js
 
 echo
-echo "==> Swift engine"
+echo "==> Swift ruleset and schedule engines"
 swift test --package-path Packages/QuietCore 2>&1 | tail -3
+
+echo
+echo "==> Swift licensing (IndieKit)"
+swift test --package-path Packages/IndieKit 2>&1 | tail -3

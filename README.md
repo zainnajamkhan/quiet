@@ -20,6 +20,7 @@ Extension/
   Resources/manifest.json
   tests/                       Node tests for both engines
 Packages/QuietCore/            Swift mirror of both engines, used by the Mac and iOS apps
+Packages/IndieKit/             Shared licensing logic, reused by all three apps in the portfolio
 Tools/
   check-ruleset.js             validates every ruleset against the shipping engine
   test.sh                      runs everything that does not need Xcode
@@ -36,6 +37,32 @@ are exercised against `Rules/fixtures/ruleset-fixture.json` and the schedule eng
 against `Rules/fixtures/schedule-vectors.json`, so a behavioural difference between the
 JavaScript and Swift implementations of either engine is a test failure rather than a
 shipped bug.
+
+## IndieKit
+
+The shared package described in `../mac-apps/README.md`, so it is written once here and
+reused by Tally and Redact rather than rebuilt per app. Only the licensing module exists so
+far.
+
+**`TrialState` and `LicenseState`** decide whether a customer has full access, given a
+purchase flag and an optional time limited trial, evaluated against a supplied `now`
+rather than the wall clock. Two models coexist because the three apps do not share one:
+Quiet and Redact have a permanently free tier plus a one time unlock (`FeatureGate`), Tally
+has a fully functional 14 day trial that then locks (`LicenseState.hasFullAccess`). A
+purchase always wins over trial state, including an expired or malformed trial record left
+over from before the purchase completed.
+
+A clock set backward, by a user trying to extend a trial or simply by a wrong system
+clock, is treated as resetting the trial to fresh rather than producing a negative elapsed
+time or an expired result. This is a deliberate product decision, not an oversight: it
+costs at most one fresh trial period, and the alternative (aggressively detecting clock
+tampering) has a worse failure mode, which is a legitimate customer with a slow-syncing
+clock getting locked out.
+
+`PurchaseObserving` is the seam to StoreKit 2. It is a protocol with no implementation
+here, because a real implementation is async, talks to Apple's servers, and cannot be unit
+tested the way the rest of this package is; an app target implements it against
+`Transaction.currentEntitlements` once the Xcode project exists.
 
 ## Design notes
 
