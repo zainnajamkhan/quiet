@@ -1,0 +1,19 @@
+{
+  "note": "Reference vectors for friction mode: the delay-plus-typed-reason gate shown before a blocked page is allowed to load. Both engines are tested against every case here.",
+  "delayCases": [
+    { "description": "one second before the delay elapses is not yet complete", "startedAt": 1000, "delaySeconds": 10, "now": 1009, "expected": false },
+    { "description": "exactly at the delay boundary is complete", "startedAt": 1000, "delaySeconds": 10, "now": 1010, "expected": true },
+    { "description": "after the delay is complete", "startedAt": 1000, "delaySeconds": 10, "now": 1500, "expected": true },
+    { "description": "zero delay is complete immediately", "startedAt": 1000, "delaySeconds": 0, "now": 1000, "expected": true },
+    { "description": "a clock rolled backward before the start is not complete", "startedAt": 1000, "delaySeconds": 10, "now": 500, "expected": false }
+  ],
+  "reasonCases": [
+    { "description": "a normal reason is valid", "reason": "just checking one thing for work", "expected": true },
+    { "description": "an empty reason is invalid", "reason": "", "expected": false },
+    { "description": "whitespace only is invalid", "reason": "     ", "expected": false },
+    { "description": "a single trimmed character is invalid, below the minimum", "reason": " a ", "expected": false },
+    { "description": "exactly the minimum length after trimming is valid", "reason": "abc", "expected": true },
+    { "description": "leading and trailing whitespace is trimmed before checking length", "reason": "  ab  ", "expected": false },
+    { "description": "tabs and newlines count as whitespace", "reason": "\t\n  \t", "expected": false }
+  ]
+}

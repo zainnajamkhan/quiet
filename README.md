@@ -12,14 +12,17 @@ Rules/
   schema.json                     JSON Schema for a ruleset
   fixtures/ruleset-fixture.json   the one fixture both ruleset engines are tested against
   fixtures/schedule-vectors.json  the one set of vectors both schedule engines are tested against
+  fixtures/friction-vectors.json  the one set of vectors both friction mode engines are tested against
 Extension/
   Resources/rules-engine.js    pure ruleset logic, shared by the content script and the tests
   Resources/schedule-engine.js pure schedule logic: always on, time windows, named Focus
+  Resources/friction-engine.js pure delay-plus-typed-reason logic for the block replacement page
   Resources/content.js         injects the stylesheet, follows single page navigation
   Resources/background.js      picks bundled versus remote ruleset, serves content scripts
   Resources/manifest.json
-  tests/                       Node tests for both engines
-Packages/QuietCore/            Swift mirror of both engines, used by the Mac and iOS apps
+  tests/                       Node tests for all three engines
+Packages/QuietCore/            Swift mirror of all three engines plus BlockSession, used by the
+                                Mac and iOS apps
 Packages/IndieKit/             Shared licensing logic, reused by all three apps in the portfolio
 Tools/
   check-ruleset.js             validates every ruleset against the shipping engine
@@ -37,6 +40,34 @@ are exercised against `Rules/fixtures/ruleset-fixture.json` and the schedule eng
 against `Rules/fixtures/schedule-vectors.json`, so a behavioural difference between the
 JavaScript and Swift implementations of either engine is a test failure rather than a
 shipped bug.
+
+## Focus mode scheduling
+
+Resolved by research, recorded in `../mac-apps/01-quiet.md` section 8a and in memory as
+`macos-focus-detection-not-available`: there is no macOS API to ask which Focus is
+currently active. The path forward is `SetFocusFilterIntent`, which is push based, so the
+user adds Quiet as a Focus Filter for each Focus once in System Settings, and the OS calls
+Quiet when that Focus turns on or off. `ScheduleEvaluator` already took the active Focus
+identifier list as a plain argument rather than querying for it, so this finding costs no
+rework, only a native integration once the Xcode project exists.
+
+## BlockSession and FrictionMode
+
+Two more pure engines for the Mac companion app's blocking session and the Safari
+extension's friction mode delay screen.
+
+**`BlockSession`** (Swift only, `QuietCore`) decides whether an app-blocking session is
+active and whether it can currently be cancelled. Strict mode's entire premise is that it
+refuses cancellation while running; this type is where that refusal is decided, tested at
+the exact start and end instants and against a clock rolled backward. It does not by
+itself make a session survive a reboot or an app deletion: that is a persistence
+responsibility for the app target once it exists.
+
+**`FrictionMode`** (mirrored in JS and Swift) decides whether a delay has elapsed and
+whether a typed reason is long enough, both against `Rules/fixtures/friction-vectors.json`
+so the two languages are checked against one shared set of cases. Times are seconds since
+the epoch rather than `Date` objects, which is what keeps the logic free of timezone
+concerns entirely.
 
 ## IndieKit
 

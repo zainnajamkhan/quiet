@@ -9,7 +9,7 @@ node Tools/check-ruleset.js
 
 echo
 echo "==> JavaScript engines"
-node --test Extension/tests/rules-engine.test.js Extension/tests/schedule-engine.test.js
+node --test Extension/tests/rules-engine.test.js Extension/tests/schedule-engine.test.js Extension/tests/friction-engine.test.js
 
 echo
 echo "==> Swift ruleset and schedule engines"
