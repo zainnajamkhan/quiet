@@ -15,8 +15,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var rulesWindow: NSWindow?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        item.button?.image = NSImage(systemSymbolName: "eye.slash", accessibilityDescription: "Quiet")
+        let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        if let symbol = NSImage(systemSymbolName: "eye.slash", accessibilityDescription: "Quiet") {
+            item.button?.image = symbol
+        } else {
+            // Falls back to visible text rather than risk a blank, easy to miss square if
+            // the symbol fails to load for any reason.
+            item.button?.title = "Quiet"
+        }
 
         let menu = NSMenu()
         menu.addItem(withTitle: "Rules…", action: #selector(showRules), keyEquivalent: "")
