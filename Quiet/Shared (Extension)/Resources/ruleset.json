@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "rulesetVersion": 4,
+  "updatedAt": "2026-09-06T00:00:00Z",
+  "sites": [
+    {
+      "id": "example",
+      "name": "Example",
+      "matches": ["*://*.example.com/*"],
+      "features": [
+        {
+          "id": "example.feed",
+          "name": "Home feed",
+          "summary": "The grid of recommended items on the home page",
+          "defaultEnabled": true,
+          "appliesTo": ["/", "/?*"],
+          "hide": ["#feed", "main > .feed-item"],
+          "verify": ["main"]
+        },
+        {
+          "id": "example.comments",
+          "name": "Comments",
+          "defaultEnabled": false,
+          "hide": ["#comments"]
+        }
+      ]
+    },
+    {
+      "id": "other",
+      "name": "Other",
+      "matches": ["https://other.test/*"],
+      "features": [
+        {
+          "id": "other.sidebar",
+          "name": "Sidebar",
+          "defaultEnabled": true,
+          "hide": [".sidebar"]
+        }
+      ]
+    }
+  ]
+}
