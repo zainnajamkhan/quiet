@@ -1,0 +1,342 @@
+{
+  "note": "Reference vectors for schedule evaluation. Both the JavaScript and Swift engines are run against every case here, so the two implementations are proven to agree rather than tested against separate copies. weekday is 1=Sunday .. 7=Saturday, matching Foundation's Calendar default. minutesSinceMidnight is local wall clock time, already extracted, so these vectors carry no timezone dependency.",
+  "cases": [
+    {
+      "description": "always-on schedule is active on an arbitrary day and time",
+      "schedule": { "id": "s-always", "kind": "always", "enabled": true },
+      "moment": { "weekday": 4, "minutesSinceMidnight": 733 },
+      "activeFocusIdentifiers": [],
+      "expected": true
+    },
+    {
+      "description": "always-on schedule is inactive when explicitly disabled",
+      "schedule": { "id": "s-always-off", "kind": "always", "enabled": false },
+      "moment": { "weekday": 4, "minutesSinceMidnight": 733 },
+      "activeFocusIdentifiers": [],
+      "expected": false
+    },
+    {
+      "description": "window: one minute before start is inactive",
+      "schedule": {
+        "id": "s-9-5",
+        "kind": "window",
+        "enabled": true,
+        "windows": [{ "days": [2, 3, 4, 5, 6], "start": "09:00", "end": "17:00" }]
+      },
+      "moment": { "weekday": 3, "minutesSinceMidnight": 539 },
+      "activeFocusIdentifiers": [],
+      "expected": false
+    },
+    {
+      "description": "window: start minute is inclusive",
+      "schedule": {
+        "id": "s-9-5",
+        "kind": "window",
+        "enabled": true,
+        "windows": [{ "days": [2, 3, 4, 5, 6], "start": "09:00", "end": "17:00" }]
+      },
+      "moment": { "weekday": 3, "minutesSinceMidnight": 540 },
+      "activeFocusIdentifiers": [],
+      "expected": true
+    },
+    {
+      "description": "window: midday is active",
+      "schedule": {
+        "id": "s-9-5",
+        "kind": "window",
+        "enabled": true,
+        "windows": [{ "days": [2, 3, 4, 5, 6], "start": "09:00", "end": "17:00" }]
+      },
+      "moment": { "weekday": 3, "minutesSinceMidnight": 720 },
+      "activeFocusIdentifiers": [],
+      "expected": true
+    },
+    {
+      "description": "window: end minute is exclusive",
+      "schedule": {
+        "id": "s-9-5",
+        "kind": "window",
+        "enabled": true,
+        "windows": [{ "days": [2, 3, 4, 5, 6], "start": "09:00", "end": "17:00" }]
+      },
+      "moment": { "weekday": 3, "minutesSinceMidnight": 1020 },
+      "activeFocusIdentifiers": [],
+      "expected": false
+    },
+    {
+      "description": "window: one minute after end is inactive",
+      "schedule": {
+        "id": "s-9-5",
+        "kind": "window",
+        "enabled": true,
+        "windows": [{ "days": [2, 3, 4, 5, 6], "start": "09:00", "end": "17:00" }]
+      },
+      "moment": { "weekday": 3, "minutesSinceMidnight": 1021 },
+      "activeFocusIdentifiers": [],
+      "expected": false
+    },
+    {
+      "description": "window: correct time but a day not in the schedule is inactive",
+      "schedule": {
+        "id": "s-9-5",
+        "kind": "window",
+        "enabled": true,
+        "windows": [{ "days": [2, 3, 4, 5, 6], "start": "09:00", "end": "17:00" }]
+      },
+      "moment": { "weekday": 7, "minutesSinceMidnight": 720 },
+      "activeFocusIdentifiers": [],
+      "expected": false
+    },
+    {
+      "description": "window: Sunday as weekday 1 also correctly excluded",
+      "schedule": {
+        "id": "s-9-5",
+        "kind": "window",
+        "enabled": true,
+        "windows": [{ "days": [2, 3, 4, 5, 6], "start": "09:00", "end": "17:00" }]
+      },
+      "moment": { "weekday": 1, "minutesSinceMidnight": 720 },
+      "activeFocusIdentifiers": [],
+      "expected": false
+    },
+    {
+      "description": "midnight crossing window: late night portion on the start day is active",
+      "schedule": {
+        "id": "s-overnight",
+        "kind": "window",
+        "enabled": true,
+        "windows": [{ "days": [6], "start": "22:00", "end": "06:00" }]
+      },
+      "moment": { "weekday": 6, "minutesSinceMidnight": 1350 },
+      "activeFocusIdentifiers": [],
+      "expected": true
+    },
+    {
+      "description": "midnight crossing window: exact start minute on the start day is active",
+      "schedule": {
+        "id": "s-overnight",
+        "kind": "window",
+        "enabled": true,
+        "windows": [{ "days": [6], "start": "22:00", "end": "06:00" }]
+      },
+      "moment": { "weekday": 6, "minutesSinceMidnight": 1320 },
+      "activeFocusIdentifiers": [],
+      "expected": true
+    },
+    {
+      "description": "midnight crossing window: one minute before start on the start day is inactive",
+      "schedule": {
+        "id": "s-overnight",
+        "kind": "window",
+        "enabled": true,
+        "windows": [{ "days": [6], "start": "22:00", "end": "06:00" }]
+      },
+      "moment": { "weekday": 6, "minutesSinceMidnight": 1319 },
+      "activeFocusIdentifiers": [],
+      "expected": false
+    },
+    {
+      "description": "midnight crossing window: early morning portion on the following day is active",
+      "schedule": {
+        "id": "s-overnight",
+        "kind": "window",
+        "enabled": true,
+        "windows": [{ "days": [6], "start": "22:00", "end": "06:00" }]
+      },
+      "moment": { "weekday": 7, "minutesSinceMidnight": 0 },
+      "activeFocusIdentifiers": [],
+      "expected": true
+    },
+    {
+      "description": "midnight crossing window: end minute on the following day is exclusive",
+      "schedule": {
+        "id": "s-overnight",
+        "kind": "window",
+        "enabled": true,
+        "windows": [{ "days": [6], "start": "22:00", "end": "06:00" }]
+      },
+      "moment": { "weekday": 7, "minutesSinceMidnight": 360 },
+      "activeFocusIdentifiers": [],
+      "expected": false
+    },
+    {
+      "description": "midnight crossing window: one minute before end on the following day is active",
+      "schedule": {
+        "id": "s-overnight",
+        "kind": "window",
+        "enabled": true,
+        "windows": [{ "days": [6], "start": "22:00", "end": "06:00" }]
+      },
+      "moment": { "weekday": 7, "minutesSinceMidnight": 359 },
+      "activeFocusIdentifiers": [],
+      "expected": true
+    },
+    {
+      "description": "midnight crossing window: the following day is unrelated once its early morning portion ends, and it is not itself a start day",
+      "schedule": {
+        "id": "s-overnight",
+        "kind": "window",
+        "enabled": true,
+        "windows": [{ "days": [6], "start": "22:00", "end": "06:00" }]
+      },
+      "moment": { "weekday": 7, "minutesSinceMidnight": 720 },
+      "activeFocusIdentifiers": [],
+      "expected": false
+    },
+    {
+      "description": "midnight crossing window: the day two days after start gets no carryover",
+      "schedule": {
+        "id": "s-overnight",
+        "kind": "window",
+        "enabled": true,
+        "windows": [{ "days": [6], "start": "22:00", "end": "06:00" }]
+      },
+      "moment": { "weekday": 1, "minutesSinceMidnight": 5 },
+      "activeFocusIdentifiers": [],
+      "expected": false
+    },
+    {
+      "description": "midnight crossing window wraps correctly from Saturday into Sunday (weekday 7 into weekday 1)",
+      "schedule": {
+        "id": "s-overnight-into-sunday",
+        "kind": "window",
+        "enabled": true,
+        "windows": [{ "days": [7], "start": "23:30", "end": "01:00" }]
+      },
+      "moment": { "weekday": 1, "minutesSinceMidnight": 30 },
+      "activeFocusIdentifiers": [],
+      "expected": true
+    },
+    {
+      "description": "two non overlapping windows: inside the morning window",
+      "schedule": {
+        "id": "s-split",
+        "kind": "window",
+        "enabled": true,
+        "windows": [
+          { "days": [2, 3, 4, 5, 6], "start": "09:00", "end": "12:00" },
+          { "days": [2, 3, 4, 5, 6], "start": "13:00", "end": "17:00" }
+        ]
+      },
+      "moment": { "weekday": 2, "minutesSinceMidnight": 600 },
+      "activeFocusIdentifiers": [],
+      "expected": true
+    },
+    {
+      "description": "two non overlapping windows: inside the lunch gap is inactive",
+      "schedule": {
+        "id": "s-split",
+        "kind": "window",
+        "enabled": true,
+        "windows": [
+          { "days": [2, 3, 4, 5, 6], "start": "09:00", "end": "12:00" },
+          { "days": [2, 3, 4, 5, 6], "start": "13:00", "end": "17:00" }
+        ]
+      },
+      "moment": { "weekday": 2, "minutesSinceMidnight": 730 },
+      "activeFocusIdentifiers": [],
+      "expected": false
+    },
+    {
+      "description": "two non overlapping windows: inside the afternoon window",
+      "schedule": {
+        "id": "s-split",
+        "kind": "window",
+        "enabled": true,
+        "windows": [
+          { "days": [2, 3, 4, 5, 6], "start": "09:00", "end": "12:00" },
+          { "days": [2, 3, 4, 5, 6], "start": "13:00", "end": "17:00" }
+        ]
+      },
+      "moment": { "weekday": 2, "minutesSinceMidnight": 900 },
+      "activeFocusIdentifiers": [],
+      "expected": true
+    },
+    {
+      "description": "window schedule disabled overrides an otherwise active window",
+      "schedule": {
+        "id": "s-9-5-off",
+        "kind": "window",
+        "enabled": false,
+        "windows": [{ "days": [2, 3, 4, 5, 6], "start": "09:00", "end": "17:00" }]
+      },
+      "moment": { "weekday": 3, "minutesSinceMidnight": 720 },
+      "activeFocusIdentifiers": [],
+      "expected": false
+    },
+    {
+      "description": "focus: matches one of several named identifiers",
+      "schedule": {
+        "id": "s-focus",
+        "kind": "focus",
+        "enabled": true,
+        "focusIdentifiers": ["com.apple.donotdisturb.mode.work", "com.apple.donotdisturb.mode.reading"]
+      },
+      "moment": { "weekday": 3, "minutesSinceMidnight": 600 },
+      "activeFocusIdentifiers": ["com.apple.donotdisturb.mode.reading"],
+      "expected": true
+    },
+    {
+      "description": "focus: does not match an unrelated identifier",
+      "schedule": {
+        "id": "s-focus",
+        "kind": "focus",
+        "enabled": true,
+        "focusIdentifiers": ["com.apple.donotdisturb.mode.work"]
+      },
+      "moment": { "weekday": 3, "minutesSinceMidnight": 600 },
+      "activeFocusIdentifiers": ["com.apple.donotdisturb.mode.personal"],
+      "expected": false
+    },
+    {
+      "description": "focus: no focus active at all is inactive",
+      "schedule": {
+        "id": "s-focus",
+        "kind": "focus",
+        "enabled": true,
+        "focusIdentifiers": ["com.apple.donotdisturb.mode.work"]
+      },
+      "moment": { "weekday": 3, "minutesSinceMidnight": 600 },
+      "activeFocusIdentifiers": [],
+      "expected": false
+    },
+    {
+      "description": "focus: the wildcard identifier matches whenever any Focus is active",
+      "schedule": { "id": "s-focus-any", "kind": "focus", "enabled": true, "focusIdentifiers": ["*"] },
+      "moment": { "weekday": 3, "minutesSinceMidnight": 600 },
+      "activeFocusIdentifiers": ["com.apple.donotdisturb.mode.custom.abc123"],
+      "expected": true
+    },
+    {
+      "description": "focus: the wildcard identifier does not match when no Focus is active",
+      "schedule": { "id": "s-focus-any", "kind": "focus", "enabled": true, "focusIdentifiers": ["*"] },
+      "moment": { "weekday": 3, "minutesSinceMidnight": 600 },
+      "activeFocusIdentifiers": [],
+      "expected": false
+    },
+    {
+      "description": "focus schedule disabled overrides a matching focus",
+      "schedule": {
+        "id": "s-focus-off",
+        "kind": "focus",
+        "enabled": false,
+        "focusIdentifiers": ["com.apple.donotdisturb.mode.work"]
+      },
+      "moment": { "weekday": 3, "minutesSinceMidnight": 600 },
+      "activeFocusIdentifiers": ["com.apple.donotdisturb.mode.work"],
+      "expected": false
+    },
+    {
+      "description": "focus identifiers are matched case sensitively",
+      "schedule": {
+        "id": "s-focus-case",
+        "kind": "focus",
+        "enabled": true,
+        "focusIdentifiers": ["com.apple.donotdisturb.mode.work"]
+      },
+      "moment": { "weekday": 3, "minutesSinceMidnight": 600 },
+      "activeFocusIdentifiers": ["COM.APPLE.DONOTDISTURB.MODE.WORK"],
+      "expected": false
+    }
+  ]
+}

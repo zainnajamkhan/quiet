@@ -8,8 +8,8 @@ echo "==> Ruleset validation"
 node Tools/check-ruleset.js
 
 echo
-echo "==> JavaScript engine"
-node --test Extension/tests/rules-engine.test.js
+echo "==> JavaScript engines"
+node --test Extension/tests/rules-engine.test.js Extension/tests/schedule-engine.test.js
 
 echo
 echo "==> Swift engine"

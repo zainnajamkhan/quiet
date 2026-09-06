@@ -9,15 +9,17 @@ Plan and market research: `../mac-apps/01-quiet.md`.
 
 ```
 Rules/
-  schema.json                  JSON Schema for a ruleset
-  fixtures/ruleset-fixture.json  the one fixture both engines are tested against
+  schema.json                     JSON Schema for a ruleset
+  fixtures/ruleset-fixture.json   the one fixture both ruleset engines are tested against
+  fixtures/schedule-vectors.json  the one set of vectors both schedule engines are tested against
 Extension/
   Resources/rules-engine.js    pure ruleset logic, shared by the content script and the tests
+  Resources/schedule-engine.js pure schedule logic: always on, time windows, named Focus
   Resources/content.js         injects the stylesheet, follows single page navigation
   Resources/background.js      picks bundled versus remote ruleset, serves content scripts
   Resources/manifest.json
-  tests/                       Node tests for the engine
-Packages/QuietCore/            Swift mirror of the engine, used by the Mac and iOS apps
+  tests/                       Node tests for both engines
+Packages/QuietCore/            Swift mirror of both engines, used by the Mac and iOS apps
 Tools/
   check-ruleset.js             validates every ruleset against the shipping engine
   test.sh                      runs everything that does not need Xcode
@@ -29,9 +31,11 @@ Tools/
 ./Tools/test.sh
 ```
 
-Runs ruleset validation, the JavaScript suite and the Swift suite. Both engines are
-exercised against `Rules/fixtures/ruleset-fixture.json`, so a behavioural difference
-between them is a test failure rather than a shipped bug.
+Runs ruleset validation, the JavaScript suite and the Swift suite. The ruleset engines
+are exercised against `Rules/fixtures/ruleset-fixture.json` and the schedule engines
+against `Rules/fixtures/schedule-vectors.json`, so a behavioural difference between the
+JavaScript and Swift implementations of either engine is a test failure rather than a
+shipped bug.
 
 ## Design notes
 
@@ -49,3 +53,17 @@ the extension offline.
 Selector fixes for an existing site ship through the ruleset and reach users immediately;
 adding a brand new site needs an app update. That trade is deliberate: selector rot is
 frequent, new sites are rare.
+
+**Schedule evaluation never touches a timezone.** `ScheduleMoment` / the JS equivalent is
+a pre-extracted (weekday, minutes since midnight) pair. Extracting it from `Date`/`Date()`
+is the one impure step, isolated to `ScheduleMoment.now` and `momentFromDate`; everything
+after that is pure and deterministic, which is what makes the midnight-crossing and
+day-boundary cases in `schedule-vectors.json` testable at all. A schedule's `window` kind
+names the day a window *starts* on; a window that crosses midnight is resolved by checking
+both today's list of days and yesterday's, never by storing two separate entries.
+
+**Focus mode detection is native only.** Neither engine can observe which macOS Focus is
+currently active; that requires the container app. The evaluator takes the active Focus
+identifiers as a plain argument, so the Mac app becomes responsible for computing them and
+pushing the result down to the extension, the same way it will push ruleset updates. That
+wiring is not built yet and depends on the Xcode project existing.
