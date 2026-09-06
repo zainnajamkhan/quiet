@@ -112,6 +112,15 @@ Selector fixes for an existing site ship through the ruleset and reach users imm
 adding a brand new site needs an app update. That trade is deliberate: selector rot is
 frequent, new sites are rare.
 
+**The app and extension share state through an App Group.** Both processes are sandboxed
+(Xcode injects `com.apple.security.app-sandbox` for a macOS app and its `.appex` even with
+no entitlements file), so each gets an isolated container and any plain shared path
+resolves to two different files. `SharedStateStore` resolves
+`CU82DCKHTL.group.com.app.Quiet` instead, which lands in `~/Library/Group Containers/`.
+Confirmed working on a free personal team, no paid membership needed. If the group is ever
+unavailable the store falls back to per-process storage and the rules window shows an
+orange warning, because that failure is otherwise completely silent.
+
 **Schedule evaluation never touches a timezone.** `ScheduleMoment` / the JS equivalent is
 a pre-extracted (weekday, minutes since midnight) pair. Extracting it from `Date`/`Date()`
 is the one impure step, isolated to `ScheduleMoment.now` and `momentFromDate`; everything
