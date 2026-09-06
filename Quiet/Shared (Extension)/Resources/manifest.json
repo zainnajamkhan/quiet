@@ -37,7 +37,8 @@
     }
   ],
   "permissions": [
-    "storage"
+    "storage",
+    "nativeMessaging"
   ],
   "host_permissions": [
     "*://*.youtube.com/*",

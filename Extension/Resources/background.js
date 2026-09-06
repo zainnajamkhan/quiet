@@ -14,8 +14,6 @@ const BUNDLED_RULESET_PATH = "ruleset.json";
 const STORAGE_KEY_REMOTE_RULESET = "quiet.remoteRuleset";
 const STORAGE_KEY_PREFERENCES = "quiet.preferences";
 
-let cachedState = null;
-
 async function readBundledRuleset() {
   const response = await fetch(api.runtime.getURL(BUNDLED_RULESET_PATH));
   return response.json();
@@ -30,28 +28,48 @@ async function readStored(key) {
   }
 }
 
+// The applicationID argument is required by the WebExtension API shape but ignored by
+// Safari, which only ever has one possible native host: this extension's own containing
+// app. A failure here (no app installed yet, message handler not reachable) must never
+// break hiding, so it degrades to "no native overrides" rather than throwing.
+async function readSharedStateFromNativeApp() {
+  try {
+    const response = await api.runtime.sendNativeMessage("quiet", { type: "quiet.getSharedState" });
+    return (response && response.preferences) || {};
+  } catch (_) {
+    return {};
+  }
+}
+
 async function buildState() {
   const bundled = await readBundledRuleset();
   const remote = await readStored(STORAGE_KEY_REMOTE_RULESET);
-  const preferences = (await readStored(STORAGE_KEY_PREFERENCES)) || {};
+  const localPreferences = (await readStored(STORAGE_KEY_PREFERENCES)) || {};
+  const nativePreferences = await readSharedStateFromNativeApp();
+
+  // Native app overrides win over what the extension stored locally, so the container
+  // app's settings UI (once it exists) is the source of truth; anything it hasn't
+  // expressed an opinion on falls back to local storage, then to each feature's own
+  // defaultEnabled inside the ruleset engine itself.
+  const preferences = { ...localPreferences, ...nativePreferences };
 
   const chosen = QuietRules.chooseRuleset(bundled, remote);
   return { ruleset: chosen.ruleset, preferences, source: chosen.source, reason: chosen.reason };
 }
 
+// Deliberately not cached: the native app can change shared state at any time with no
+// event the extension can listen for, so every request rebuilds from scratch rather than
+// risking a stale answer. Revisit if this ever shows up as a real performance cost.
 async function currentState() {
-  if (!cachedState) {
-    cachedState = await buildState();
-  }
-  return cachedState;
+  return buildState();
 }
 
 async function broadcastState() {
-  cachedState = await buildState();
+  const state = await currentState();
   const tabs = await api.tabs.query({});
   for (const tab of tabs) {
     if (typeof tab.id !== "number") continue;
-    api.tabs.sendMessage(tab.id, { type: "quiet.stateChanged", state: cachedState }).catch(() => {});
+    api.tabs.sendMessage(tab.id, { type: "quiet.stateChanged", state }).catch(() => {});
   }
 }
 

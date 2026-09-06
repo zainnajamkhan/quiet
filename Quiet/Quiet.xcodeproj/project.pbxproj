@@ -8,11 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		206D898F50D4A29735A1BD3D /* QuietCore in Frameworks */ = {isa = PBXBuildFile; productRef = 9704EE3B4D2426EE434FE056 /* QuietCore */; };
+		24515E9102F9565361E03773 /* QuietCore in Frameworks */ = {isa = PBXBuildFile; productRef = F03D0E6621DE3C5E2B94F2AC /* QuietCore */; };
 		55DF5F3B41000BBDE8DBF80D /* IndieKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0D5E79A5B360742653F5EA79 /* IndieKit */; };
 		AC298F90304DE9B7003A0093 /* Quiet Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AC298F8F304DE9B7003A0093 /* Quiet Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		AC298F9A304DE9B7003A0093 /* Quiet Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AC298F99304DE9B7003A0093 /* Quiet Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		B743AFAE82B94A4732DE897D /* IndieKit in Frameworks */ = {isa = PBXBuildFile; productRef = A986A9D5AB4046F6F7BBE3A7 /* IndieKit */; };
 		CBC1E6545C77B99A1C92F80F /* QuietCore in Frameworks */ = {isa = PBXBuildFile; productRef = 10B6406459E92325CB4FF157 /* QuietCore */; };
+		ED410153C6B51A3711AF4B98 /* QuietCore in Frameworks */ = {isa = PBXBuildFile; productRef = ECECF32D9AA2D828697A1867 /* QuietCore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -183,6 +185,8 @@
 		};
 		AC298F85304DE9B7003A0093 /* macOS (App) */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = "macOS (App)";
 			sourceTree = "<group>";
 		};
@@ -227,6 +231,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				24515E9102F9565361E03773 /* QuietCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -234,6 +239,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED410153C6B51A3711AF4B98 /* QuietCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,6 +341,9 @@
 				AC298F93304DE9B7003A0093 /* iOS (Extension) */,
 			);
 			name = "Quiet Extension (iOS)";
+			packageProductDependencies = (
+				F03D0E6621DE3C5E2B94F2AC /* QuietCore */,
+			);
 			productName = "Quiet Extension (iOS)";
 			productReference = AC298F8F304DE9B7003A0093 /* Quiet Extension.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -355,6 +364,9 @@
 				AC298F9D304DE9B7003A0093 /* macOS (Extension) */,
 			);
 			name = "Quiet Extension (macOS)";
+			packageProductDependencies = (
+				ECECF32D9AA2D828697A1867 /* QuietCore */,
+			);
 			productName = "Quiet Extension (macOS)";
 			productReference = AC298F99304DE9B7003A0093 /* Quiet Extension.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -393,8 +405,8 @@
 			mainGroup = AC298F55304DE9B6003A0093;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "../Packages/QuietCore" */,
-				722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "../Packages/IndieKit" */,
+				EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "QuietCore" */,
+				722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "IndieKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AC298F73304DE9B7003A0093 /* Products */;
@@ -640,6 +652,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CU82DCKHTL;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
@@ -675,6 +688,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CU82DCKHTL;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
@@ -950,11 +964,11 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "../Packages/IndieKit" */ = {
+		722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "IndieKit" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Packages/IndieKit;
 		};
-		EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "../Packages/QuietCore" */ = {
+		EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "QuietCore" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Packages/QuietCore;
 		};
@@ -963,23 +977,33 @@
 /* Begin XCSwiftPackageProductDependency section */
 		0D5E79A5B360742653F5EA79 /* IndieKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "../Packages/IndieKit" */;
+			package = 722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "IndieKit" */;
 			productName = IndieKit;
 		};
 		10B6406459E92325CB4FF157 /* QuietCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "../Packages/QuietCore" */;
+			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "QuietCore" */;
 			productName = QuietCore;
 		};
 		9704EE3B4D2426EE434FE056 /* QuietCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "../Packages/QuietCore" */;
+			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "QuietCore" */;
 			productName = QuietCore;
 		};
 		A986A9D5AB4046F6F7BBE3A7 /* IndieKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "../Packages/IndieKit" */;
+			package = 722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "IndieKit" */;
 			productName = IndieKit;
+		};
+		ECECF32D9AA2D828697A1867 /* QuietCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "QuietCore" */;
+			productName = QuietCore;
+		};
+		F03D0E6621DE3C5E2B94F2AC /* QuietCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "QuietCore" */;
+			productName = QuietCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
