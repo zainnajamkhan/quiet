@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://quiet.app/schema/ruleset-1.json",
+  "title": "Quiet ruleset",
+  "description": "Drives which page elements are hidden, on which sites. Shipped bundled inside the app and updatable at runtime. Contains data only: CSS selectors and match patterns, never executable code.",
+  "type": "object",
+  "required": ["schemaVersion", "rulesetVersion", "sites"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1,
+      "description": "Shape of this document. An engine refuses any ruleset whose schemaVersion it does not understand and falls back to its bundled copy."
+    },
+    "rulesetVersion": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Content version. Increases every time selectors change. A remote ruleset is adopted only if this is higher than the bundled one."
+    },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "sites": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/site" }
+    }
+  },
+  "$defs": {
+    "site": {
+      "type": "object",
+      "required": ["id", "name", "matches", "features"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "description": "Stable identifier. Never change it: user preferences are keyed on it."
+        },
+        "name": { "type": "string", "minLength": 1 },
+        "matches": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/matchPattern" }
+        },
+        "features": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/feature" }
+        }
+      }
+    },
+    "feature": {
+      "type": "object",
+      "required": ["id", "name", "defaultEnabled", "hide"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*\\.[a-z0-9]+(-[a-z0-9]+)*$",
+          "description": "site-id.feature-id. Stable forever. Selectors underneath may change freely; this may not."
+        },
+        "name": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string" },
+        "defaultEnabled": { "type": "boolean" },
+        "appliesTo": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Optional path globs. Absent means every page on the site. Matched against pathname plus search."
+        },
+        "hide": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/selector" },
+          "description": "CSS selectors to hide."
+        },
+        "verify": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/selector" },
+          "description": "Selectors that must exist on a healthy page. Used by Tools/check-selectors to tell 'the site changed its DOM' apart from 'this feature is not present on this page'."
+        }
+      }
+    },
+    "selector": {
+      "type": "string",
+      "minLength": 1,
+      "not": { "pattern": "[{};<]|\\*/" },
+      "description": "A CSS selector. Characters that could break out of a stylesheet rule or a comment are forbidden. The child combinator > and the sibling combinators ~ and + stay legal."
+    },
+    "matchPattern": {
+      "type": "string",
+      "pattern": "^(\\*|https?)://(\\*|(\\*\\.)?[A-Za-z0-9.-]+)/.*$",
+      "description": "WebExtension style match pattern, restricted to http and https."
+    }
+  }
+}
