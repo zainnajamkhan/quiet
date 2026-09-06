@@ -7,8 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		206D898F50D4A29735A1BD3D /* QuietCore in Frameworks */ = {isa = PBXBuildFile; productRef = 9704EE3B4D2426EE434FE056 /* QuietCore */; };
+		55DF5F3B41000BBDE8DBF80D /* IndieKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0D5E79A5B360742653F5EA79 /* IndieKit */; };
 		AC298F90304DE9B7003A0093 /* Quiet Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AC298F8F304DE9B7003A0093 /* Quiet Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		AC298F9A304DE9B7003A0093 /* Quiet Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AC298F99304DE9B7003A0093 /* Quiet Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B743AFAE82B94A4732DE897D /* IndieKit in Frameworks */ = {isa = PBXBuildFile; productRef = A986A9D5AB4046F6F7BBE3A7 /* IndieKit */; };
+		CBC1E6545C77B99A1C92F80F /* QuietCore in Frameworks */ = {isa = PBXBuildFile; productRef = 10B6406459E92325CB4FF157 /* QuietCore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -118,6 +122,10 @@
 				Resources/popup.html,
 				Resources/popup.js,
 				SafariWebExtensionHandler.swift,
+				"Resources/rules-engine.js",
+				"Resources/schedule-engine.js",
+				"Resources/friction-engine.js",
+				Resources/ruleset.json,
 			);
 			target = AC298F8E304DE9B7003A0093 /* Quiet Extension (iOS) */;
 		};
@@ -133,6 +141,10 @@
 				Resources/popup.html,
 				Resources/popup.js,
 				SafariWebExtensionHandler.swift,
+				"Resources/rules-engine.js",
+				"Resources/schedule-engine.js",
+				"Resources/friction-engine.js",
+				Resources/ruleset.json,
 			);
 			target = AC298F98304DE9B7003A0093 /* Quiet Extension (macOS) */;
 		};
@@ -171,6 +183,8 @@
 		};
 		AC298F85304DE9B7003A0093 /* macOS (App) */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = "macOS (App)";
 			sourceTree = "<group>";
 		};
@@ -197,6 +211,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CBC1E6545C77B99A1C92F80F /* QuietCore in Frameworks */,
+				55DF5F3B41000BBDE8DBF80D /* IndieKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -204,6 +220,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				206D898F50D4A29735A1BD3D /* QuietCore in Frameworks */,
+				B743AFAE82B94A4732DE897D /* IndieKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,6 +288,8 @@
 			);
 			name = "Quiet (iOS)";
 			packageProductDependencies = (
+				10B6406459E92325CB4FF157 /* QuietCore */,
+				0D5E79A5B360742653F5EA79 /* IndieKit */,
 			);
 			productName = "Quiet (iOS)";
 			productReference = AC298F72304DE9B7003A0093 /* Quiet.app */;
@@ -294,6 +314,8 @@
 			);
 			name = "Quiet (macOS)";
 			packageProductDependencies = (
+				9704EE3B4D2426EE434FE056 /* QuietCore */,
+				A986A9D5AB4046F6F7BBE3A7 /* IndieKit */,
 			);
 			productName = "Quiet (macOS)";
 			productReference = AC298F84304DE9B7003A0093 /* Quiet.app */;
@@ -315,8 +337,6 @@
 				AC298F93304DE9B7003A0093 /* iOS (Extension) */,
 			);
 			name = "Quiet Extension (iOS)";
-			packageProductDependencies = (
-			);
 			productName = "Quiet Extension (iOS)";
 			productReference = AC298F8F304DE9B7003A0093 /* Quiet Extension.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -337,8 +357,6 @@
 				AC298F9D304DE9B7003A0093 /* macOS (Extension) */,
 			);
 			name = "Quiet Extension (macOS)";
-			packageProductDependencies = (
-			);
 			productName = "Quiet Extension (macOS)";
 			productReference = AC298F99304DE9B7003A0093 /* Quiet Extension.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -376,6 +394,10 @@
 			);
 			mainGroup = AC298F55304DE9B6003A0093;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "QuietCore" */,
+				722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "IndieKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AC298F73304DE9B7003A0093 /* Products */;
 			projectDirPath = "";
@@ -926,6 +948,40 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "IndieKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../Packages/IndieKit;
+		};
+		EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "QuietCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../Packages/QuietCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0D5E79A5B360742653F5EA79 /* IndieKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "IndieKit" */;
+			productName = IndieKit;
+		};
+		10B6406459E92325CB4FF157 /* QuietCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "QuietCore" */;
+			productName = QuietCore;
+		};
+		9704EE3B4D2426EE434FE056 /* QuietCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "QuietCore" */;
+			productName = QuietCore;
+		};
+		A986A9D5AB4046F6F7BBE3A7 /* IndieKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "IndieKit" */;
+			productName = IndieKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = AC298F56304DE9B6003A0093 /* Project object */;
 }
