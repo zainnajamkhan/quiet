@@ -1,10 +1,10 @@
-// Quiet selector check, generated from ruleset v3.
+// Quiet selector check, generated from ruleset v4.
 // Paste into Safari's Web Inspector console (Develop > Show Web Inspector > Console)
 // while on the site you want to check, then read the table.
 (function () {
   var RULESET = {
   "schemaVersion": 1,
-  "rulesetVersion": 3,
+  "rulesetVersion": 4,
   "updatedAt": "2026-09-07T00:00:00Z",
   "sites": [
     {
@@ -17,7 +17,7 @@
         {
           "id": "youtube.home-feed",
           "name": "Home page recommendation grid",
-          "summary": "The wall of recommended videos on the YouTube home page.",
+          "summary": "The wall of recommended videos on the YouTube home page. Verified 2026-09-07 on the logged out home page (1 match).",
           "defaultEnabled": true,
           "appliesTo": [
             "/",
@@ -33,11 +33,11 @@
         {
           "id": "youtube.shorts",
           "name": "Shorts shelves",
-          "summary": "Shorts rows on the home page and in search results.",
+          "summary": "Shorts shelves and Shorts thumbnails. Verified September 2026: YouTube replaced ytd-reel-shelf-renderer with these view-model elements. Verified 2026-09-07 on a search results page (2 shelves, 15 thumbnails).",
           "defaultEnabled": true,
           "hide": [
-            "ytd-reel-shelf-renderer",
-            "ytd-rich-shelf-renderer[is-shorts]"
+            "grid-shelf-view-model",
+            "ytm-shorts-lockup-view-model"
           ],
           "verify": [
             "ytd-app"
@@ -46,7 +46,7 @@
         {
           "id": "youtube.up-next",
           "name": "Up next sidebar",
-          "summary": "The recommended videos column beside a video.",
+          "summary": "The recommended videos column beside a video. Verified 2026-09-07 (1 match).",
           "defaultEnabled": false,
           "hide": [
             "ytd-watch-next-secondary-results-renderer"
@@ -64,7 +64,8 @@
           ],
           "verify": [
             "ytd-app"
-          ]
+          ],
+          "summary": "Verified 2026-09-07 (1 match)."
         }
       ]
     },
@@ -79,7 +80,7 @@
         {
           "id": "x.sidebar",
           "name": "Trends and Who to follow sidebar",
-          "summary": "The whole right hand column: trending topics and follow suggestions.",
+          "summary": "The whole right hand column: trending topics and follow suggestions. NOT YET VERIFIED against a live page: the site requires login. Run Tools/selector-check.js while signed in.",
           "defaultEnabled": true,
           "hide": [
             "[data-testid=\"sidebarColumn\"]"
@@ -91,7 +92,7 @@
         {
           "id": "x.explore",
           "name": "Explore page contents",
-          "summary": "Blanks out the Explore tab's content so opening it is a dead end.",
+          "summary": "Blanks out the Explore tab's content so opening it is a dead end. NOT YET VERIFIED against a live page: the site requires login. Run Tools/selector-check.js while signed in.",
           "defaultEnabled": false,
           "appliesTo": [
             "/explore*"
@@ -115,7 +116,7 @@
         {
           "id": "linkedin.feed",
           "name": "Home feed",
-          "summary": "The scrolling post feed, leaving messaging, jobs and profiles usable.",
+          "summary": "The scrolling post feed, leaving messaging, jobs and profiles usable. NOT YET VERIFIED against a live page: the site requires login. Run Tools/selector-check.js while signed in.",
           "defaultEnabled": true,
           "appliesTo": [
             "/feed*",
@@ -133,7 +134,7 @@
         {
           "id": "linkedin.news",
           "name": "LinkedIn News and suggestions rail",
-          "summary": "The right hand column with news and 'Add to your feed'.",
+          "summary": "The right hand column with news and 'Add to your feed'. NOT YET VERIFIED against a live page: the site requires login. Run Tools/selector-check.js while signed in.",
           "defaultEnabled": true,
           "hide": [
             "aside.scaffold-layout__aside"
@@ -154,7 +155,7 @@
         {
           "id": "reddit.home-feed",
           "name": "Home feed",
-          "summary": "The front page post list. Individual subreddits stay browsable.",
+          "summary": "The front page post list. Individual subreddits stay browsable. NOT YET VERIFIED against a live page: the site requires login. Run Tools/selector-check.js while signed in.",
           "defaultEnabled": true,
           "appliesTo": [
             "/",
@@ -178,7 +179,8 @@
           ],
           "verify": [
             "shreddit-app"
-          ]
+          ],
+          "summary": "NOT YET VERIFIED against a live page: the site requires login. Run Tools/selector-check.js while signed in."
         }
       ]
     },
@@ -192,7 +194,7 @@
         {
           "id": "instagram.reels-nav",
           "name": "Reels navigation link",
-          "summary": "Removes the Reels entry point from the sidebar.",
+          "summary": "Removes the Reels entry point from the sidebar. Verified 2026-09-07 by the user in Safari (1 match).",
           "defaultEnabled": true,
           "hide": [
             "a[href=\"/reels/\"]"
@@ -210,7 +212,8 @@
           ],
           "verify": [
             "nav"
-          ]
+          ],
+          "summary": "Verified 2026-09-07 by the user in Safari (1 match)."
         }
       ]
     },
@@ -224,7 +227,7 @@
         {
           "id": "facebook.feed",
           "name": "News feed",
-          "summary": "The main scrolling feed on the home page.",
+          "summary": "The main scrolling feed on the home page. NOT YET VERIFIED against a live page: the site requires login. Run Tools/selector-check.js while signed in.",
           "defaultEnabled": true,
           "appliesTo": [
             "/",
@@ -247,7 +250,8 @@
           ],
           "verify": [
             "[role=\"banner\"]"
-          ]
+          ],
+          "summary": "NOT YET VERIFIED against a live page: the site requires login. Run Tools/selector-check.js while signed in."
         }
       ]
     }
