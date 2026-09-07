@@ -43,13 +43,30 @@ final class AppBlockerService {
         AXIsProcessTrusted()
     }
 
-    /// Shows the system's Accessibility permission prompt. Returns the trust state as it
-    /// was at call time, which is normally false on first run: macOS grants the permission
-    /// out of band, so callers must re-check later rather than treat this as the answer.
+    /// Asks for Accessibility permission, and then opens System Settings to the right pane.
+    ///
+    /// Both, because neither is enough alone. macOS shows the system prompt **only once per
+    /// app**: after it has been seen and dismissed, this call silently returns false and
+    /// nothing visible happens, which reads as a dead button. Opening the pane always works.
+    ///
+    /// The prompt is still worth firing first: it is what registers the app in the
+    /// Accessibility list, and an app that has never asked may not be listed at all, leaving
+    /// the user to hunt for it with the + button.
+    ///
+    /// Returns the trust state at call time, which is normally false: macOS grants this out
+    /// of band, so callers must re-check later rather than treat this as the answer.
     @discardableResult
     func requestAccessibilityPermission() -> Bool {
         let key = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String
-        return AXIsProcessTrustedWithOptions([key: true] as CFDictionary)
+        let trusted = AXIsProcessTrustedWithOptions([key: true] as CFDictionary)
+        if !trusted { openAccessibilitySettings() }
+        return trusted
+    }
+
+    func openAccessibilitySettings() {
+        guard let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")
+        else { return }
+        NSWorkspace.shared.open(url)
     }
 
     func start() {

@@ -21,6 +21,7 @@ final class BlockingModel: ObservableObject {
     @Published var isAccessibilityTrusted: Bool
 
     private let blocker: AppBlockerService
+    private var accessibilityObserver: NSObjectProtocol?
 
     init(blocker: AppBlockerService) {
         self.blocker = blocker
@@ -94,6 +95,18 @@ final class BlockingModel: ObservableObject {
         }
     }
 
+    /// Granting happens in System Settings, so the app finds out by looking again when the
+    /// user comes back to it. Without this the banner stays up after the permission has
+    /// actually been given, which reads as the grant not having worked.
+    func startWatchingAccessibility() {
+        guard accessibilityObserver == nil else { return }
+        accessibilityObserver = NotificationCenter.default.addObserver(
+            forName: NSApplication.didBecomeActiveNotification, object: nil, queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated { self?.refreshAccessibility() }
+        }
+    }
+
     func refreshAccessibility() {
         isAccessibilityTrusted = blocker.isAccessibilityTrusted
     }
@@ -145,7 +158,7 @@ struct BlockingView: View {
                 NoticeBar(
                     symbol: "exclamationmark.triangle.fill",
                     message: "Quiet needs Accessibility permission to hide blocked apps.",
-                    actionTitle: "Grant…",
+                    actionTitle: "Open Settings…",
                     tint: .orange
                 ) {
                     model.requestAccessibility()
@@ -158,7 +171,10 @@ struct BlockingView: View {
             }
             .formStyle(.grouped)
         }
-        .onAppear { model.refreshAccessibility() }
+        .onAppear {
+            model.refreshAccessibility()
+            model.startWatchingAccessibility()
+        }
     }
 
     // MARK: - Websites
