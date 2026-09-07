@@ -17,6 +17,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var blockingModel: BlockingModel?
     private let purchases = PurchaseModel()
     private let extensionStatus = ExtensionStatusModel()
+    private let updates = RulesetUpdateService(bundled: RuleEditorLoader.loadRuleset())
     private var onboardingWindow: NSWindow?
 
     private static let onboardingCompletedKey = "quiet.onboardingCompleted"
@@ -46,6 +47,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem = item
 
         Task { await purchases.start() }
+        Task { await updates.checkIfDue() }
         extensionStatus.refresh()
 
         if hasCompletedOnboarding {
@@ -114,7 +116,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             ruleset: RuleEditorLoader.loadRuleset(),
             blockingModel: blockingModel,
             purchases: purchases,
-            extensionStatus: extensionStatus
+            extensionStatus: extensionStatus,
+            updates: updates
         )
 
         let window = NSWindow(

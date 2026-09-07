@@ -21,6 +21,7 @@ struct MainWindowView: View {
     @ObservedObject var blockingModel: BlockingModel
     @ObservedObject var purchases: PurchaseModel
     @ObservedObject var extensionStatus: ExtensionStatusModel
+    @ObservedObject var updates: RulesetUpdateService
 
     enum Screen: String, CaseIterable, Identifiable {
         case hide
@@ -104,6 +105,7 @@ struct MainWindowView: View {
                     ruleset: ruleset,
                     initialPreferences: SharedStateStore.load().preferences,
                     purchases: purchases,
+                    updates: updates,
                     onShowPro: { screen = .pro }
                 )
             } else {

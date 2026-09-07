@@ -13,6 +13,13 @@ const api = typeof browser !== "undefined" ? browser : chrome;
 const BUNDLED_RULESET_PATH = "ruleset.json";
 const STORAGE_KEY_REMOTE_RULESET = "quiet.remoteRuleset";
 const STORAGE_KEY_PREFERENCES = "quiet.preferences";
+const STORAGE_KEY_RULESET_SYNCED_AT = "quiet.rulesetSyncedAt";
+
+// The extension does not fetch rules itself. It has no network permission, and the code
+// that decides whether a published ruleset is safe to run lives in the app, where it is
+// unit tested; a second copy here would be a second thing to get wrong. The app downloads
+// and validates, and this only collects the result.
+const RULESET_SYNC_INTERVAL_MS = 6 * 60 * 60 * 1000;
 
 async function readBundledRuleset() {
   const response = await fetch(api.runtime.getURL(BUNDLED_RULESET_PATH));
@@ -42,6 +49,36 @@ async function readSharedStateFromNativeApp() {
   } catch (_) {
     return { preferences: {}, blockedHosts: [] };
   }
+}
+
+async function writeStored(key, value) {
+  try {
+    await api.storage.local.set({ [key]: value });
+  } catch (_) {
+    // A full or unavailable store only costs a re-fetch next time.
+  }
+}
+
+// Copies whatever ruleset the app has accepted into extension storage, so the hot path in
+// buildState keeps reading one cheap local value rather than paying for a native round trip
+// on every page load. Any failure leaves the previous copy in place.
+async function syncRemoteRuleset() {
+  try {
+    const response = await api.runtime.sendNativeMessage("quiet", {
+      type: "quiet.getRemoteRuleset",
+    });
+    const ruleset = response && response.ruleset ? response.ruleset : null;
+    await writeStored(STORAGE_KEY_REMOTE_RULESET, ruleset);
+    await writeStored(STORAGE_KEY_RULESET_SYNCED_AT, Date.now());
+  } catch (_) {
+    // No app installed, or it has never accepted an update. Bundled rules still apply.
+  }
+}
+
+async function syncRemoteRulesetIfStale() {
+  const syncedAt = await readStored(STORAGE_KEY_RULESET_SYNCED_AT);
+  if (typeof syncedAt === "number" && Date.now() - syncedAt < RULESET_SYNC_INTERVAL_MS) return;
+  await syncRemoteRuleset();
 }
 
 async function buildState() {
@@ -85,6 +122,9 @@ async function broadcastState() {
 
 api.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (!message || message.type !== "quiet.state") return false;
+  // Deliberately not awaited: a page must never wait on a rule sync to find out what to
+  // hide. A newly synced ruleset takes effect on the next navigation.
+  syncRemoteRulesetIfStale().then(broadcastState);
   currentState().then(sendResponse);
   return true;
 });
@@ -95,3 +135,7 @@ api.storage.onChanged.addListener((changes, areaName) => {
     broadcastState();
   }
 });
+
+// Safari can tear a background page down and bring it back, so this runs on every load
+// rather than only on install.
+syncRemoteRulesetIfStale();
