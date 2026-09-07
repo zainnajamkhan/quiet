@@ -17,6 +17,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var blockingModel: BlockingModel?
     private let purchases = PurchaseModel()
     private let extensionStatus = ExtensionStatusModel()
+    private let focusMonitor = FocusMonitor()
     private var onboardingWindow: NSWindow?
 
     private static let onboardingCompletedKey = "quiet.onboardingCompleted"
@@ -26,10 +27,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        let blocker = AppBlockerService(policyProvider: { BlockPolicyStore.load() })
+        let focusMonitor = self.focusMonitor
+        let blocker = AppBlockerService(
+            policyProvider: { BlockPolicyStore.load() },
+            focusProvider: { MainActor.assumeIsolated { focusMonitor.activeIdentifiers } }
+        )
         blocker.start()
         self.blocker = blocker
-        self.blockingModel = BlockingModel(blocker: blocker)
+
+        let blockingModel = BlockingModel(
+            blocker: blocker,
+            focusProvider: { MainActor.assumeIsolated { focusMonitor.activeIdentifiers } }
+        )
+        self.blockingModel = blockingModel
+
+        // Wired after both exist: the monitor learns that a Focus started or ended, and the
+        // blocking model is what turns that into enforcement and an updated host list for
+        // the Safari extension.
+        focusMonitor.onChange = { [weak blockingModel] in blockingModel?.focusDidChange() }
+        focusMonitor.start()
 
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let symbol = NSImage(systemSymbolName: "eye.slash", accessibilityDescription: "Quiet") {
@@ -66,6 +82,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationWillTerminate(_ notification: Notification) {
         blocker?.stop()
+        focusMonitor.stop()
+        blockingModel?.prepareForTermination()
     }
 
     private func showOnboarding() {
@@ -114,7 +132,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             ruleEditor: RuleEditorLoader.makeView(purchases: purchases),
             blockingModel: blockingModel,
             purchases: purchases,
-            extensionStatus: extensionStatus
+            extensionStatus: extensionStatus,
+            focus: focusMonitor
         )
 
         let window = NSWindow(

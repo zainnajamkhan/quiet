@@ -13,8 +13,14 @@ import Cocoa
 // storyboard was removed (it opened a second, competing window) nothing set the delegate,
 // so applicationDidFinishLaunching never ran and no window ever appeared. Wiring it here
 // makes startup independent of any nib or storyboard.
-let application = NSApplication.shared
-let delegate = AppDelegate()
-application.delegate = delegate
-application.setActivationPolicy(.regular)
-application.run()
+//
+// Top level code in main.swift is not statically main actor isolated, but it does in fact
+// run on the main thread before anything else exists, so the assertion below is the
+// accurate way to say so rather than a way to silence a warning.
+MainActor.assumeIsolated {
+    let application = NSApplication.shared
+    let delegate = AppDelegate()
+    application.delegate = delegate
+    application.setActivationPolicy(.regular)
+    application.run()
+}

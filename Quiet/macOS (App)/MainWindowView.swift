@@ -18,6 +18,7 @@ struct MainWindowView: View {
     @ObservedObject var blockingModel: BlockingModel
     @ObservedObject var purchases: PurchaseModel
     @ObservedObject var extensionStatus: ExtensionStatusModel
+    @ObservedObject var focus: FocusMonitor
 
     var body: some View {
         VStack(spacing: 0) {
@@ -56,7 +57,7 @@ struct MainWindowView: View {
             }
             .tabItem { Label("Hide", systemImage: "eye.slash") }
 
-            BlockingView(model: blockingModel, purchases: purchases)
+            BlockingView(model: blockingModel, purchases: purchases, focus: focus)
                 .tabItem { Label("Block", systemImage: "hand.raised") }
         }
         .frame(minWidth: 520, minHeight: 460)

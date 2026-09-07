@@ -18,12 +18,16 @@ final class BlockingModel: ObservableObject {
     @Published var policy: BlockPolicy
     @Published var newHost: String = ""
     @Published var hostError: String?
+    @Published var newFocusName: String = ""
+    @Published var focusError: String?
     @Published var isAccessibilityTrusted: Bool
 
     private let blocker: AppBlockerService
+    private let focusProvider: () -> [String]
 
-    init(blocker: AppBlockerService) {
+    init(blocker: AppBlockerService, focusProvider: @escaping () -> [String] = { [] }) {
         self.blocker = blocker
+        self.focusProvider = focusProvider
         self.policy = BlockPolicyStore.load()
         self.isAccessibilityTrusted = blocker.isAccessibilityTrusted
     }
@@ -33,11 +37,7 @@ final class BlockingModel: ObservableObject {
     /// do nothing while looking configured.
     private func ensureSchedule(in policy: BlockPolicy) -> BlockPolicy {
         guard policy.schedules.isEmpty else { return policy }
-        return BlockPolicy(
-            blockedApplications: policy.blockedApplications,
-            blockedHosts: policy.blockedHosts,
-            schedules: [Schedule(id: "always", kind: .always, enabled: true)]
-        )
+        return policy.settingBlocksAlways(true)
     }
 
     func addHost() {
@@ -53,29 +53,17 @@ final class BlockingModel: ObservableObject {
         }
         hostError = nil
         newHost = ""
-        policy = ensureSchedule(in: BlockPolicy(
-            blockedApplications: policy.blockedApplications,
-            blockedHosts: policy.blockedHosts + [pattern],
-            schedules: policy.schedules
-        ))
+        policy = ensureSchedule(in: policy.with(blockedHosts: policy.blockedHosts + [pattern]))
         persist()
     }
 
     func removeHost(_ pattern: HostPattern) {
-        policy = BlockPolicy(
-            blockedApplications: policy.blockedApplications,
-            blockedHosts: policy.blockedHosts.filter { $0 != pattern },
-            schedules: policy.schedules
-        )
+        policy = policy.with(blockedHosts: policy.blockedHosts.filter { $0 != pattern })
         persist()
     }
 
     func removeApplication(_ app: BlockedApplication) {
-        policy = BlockPolicy(
-            blockedApplications: policy.blockedApplications.filter { $0.id != app.id },
-            blockedHosts: policy.blockedHosts,
-            schedules: policy.schedules
-        )
+        policy = policy.with(blockedApplications: policy.blockedApplications.filter { $0.id != app.id })
         persist()
     }
 
@@ -98,11 +86,7 @@ final class BlockingModel: ObservableObject {
             added.append(BlockedApplication(id: identifier, name: name))
         }
 
-        policy = ensureSchedule(in: BlockPolicy(
-            blockedApplications: added,
-            blockedHosts: policy.blockedHosts,
-            schedules: policy.schedules
-        ))
+        policy = ensureSchedule(in: policy.with(blockedApplications: added))
         persist()
     }
 
@@ -120,6 +104,66 @@ final class BlockingModel: ObservableObject {
         isAccessibilityTrusted = blocker.isAccessibilityTrusted
     }
 
+    // MARK: - Focus
+
+    /// Blocking is either always on or driven by a Focus, never both: an always-on schedule
+    /// alongside the Focus schedules would keep blocking after every Focus ended, which
+    /// reads to the user as "Focus mode is broken".
+    var blocksAlways: Bool {
+        get { policy.blocksAlways }
+        set {
+            policy = policy.settingBlocksAlways(newValue)
+            persist()
+        }
+    }
+
+    var activeFocusIdentifiers: [String] { focusProvider() }
+
+    /// The name to show for whatever Focus is currently driving Quiet. Falls back to the
+    /// raw identifier so a link the user deleted while it was running still reads as
+    /// something rather than vanishing.
+    var activeFocusName: String? {
+        guard let identifier = activeFocusIdentifiers.first else { return nil }
+        if identifier == FocusPolicy.anyFocusIdentifier { return FocusPolicy.anyFocus.name }
+        return policy.focusProfiles.first { $0.id == identifier }?.name ?? identifier
+    }
+
+    func addFocusProfile() {
+        let name = newFocusName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty else { return }
+        guard let profile = FocusPolicy.makeProfile(name: name, existing: policy.focusProfiles) else {
+            focusError = "\"\(name)\" needs at least one letter or number."
+            return
+        }
+        guard !policy.focusProfiles.contains(where: { $0.name.caseInsensitiveCompare(name) == .orderedSame }) else {
+            focusError = "\(name) is already here."
+            return
+        }
+        focusError = nil
+        newFocusName = ""
+        policy = policy.settingFocusProfiles(policy.focusProfiles + [profile])
+        persist()
+    }
+
+    func removeFocusProfile(_ profile: FocusProfile) {
+        policy = policy.settingFocusProfiles(policy.focusProfiles.filter { $0.id != profile.id })
+        persist()
+    }
+
+    /// Re-runs enforcement after the system tells us a Focus started or ended. The policy
+    /// has not changed, only the answer to "is it active right now", so this republishes
+    /// and re-enforces without touching what is stored.
+    func focusDidChange() {
+        objectWillChange.send()
+        publishBlockedHostsToExtension()
+        blocker.enforceOnAllRunningApplications()
+    }
+
+    func openFocusSettings() {
+        guard let url = URL(string: "x-apple.systempreferences:com.apple.Focus-Settings.extension") else { return }
+        NSWorkspace.shared.open(url)
+    }
+
     private func persist() {
         try? BlockPolicyStore.save(policy)
         publishBlockedHostsToExtension()
@@ -128,21 +172,50 @@ final class BlockingModel: ObservableObject {
 
     /// The extension has no clock or schedule logic of its own, so the app resolves the
     /// currently blocked hosts and hands over a flat list.
-    private func publishBlockedHostsToExtension() {
+    private func publishBlockedHostsToExtension(activeFocusIdentifiers: [String]? = nil) {
         let hosts = BlockEvaluator.currentlyBlockedHosts(
             policy: policy,
             session: nil,
             now: Date(),
-            moment: ScheduleMoment.now()
+            moment: ScheduleMoment.now(),
+            activeFocusIdentifiers: activeFocusIdentifiers ?? focusProvider()
         )
         let existing = SharedStateStore.load()
         try? SharedStateStore.save(SharedState(preferences: existing.preferences, blockedHosts: hosts))
+    }
+
+    /// Drops any block that only exists because a Focus is running, just before Quiet stops
+    /// running. Nothing would be left to notice that Focus ending, so the block would sit in
+    /// Safari indefinitely and the only way to discover why would be to reopen Quiet.
+    /// Blocks that do not depend on a Focus, such as "block all the time", are left alone.
+    func prepareForTermination() {
+        publishBlockedHostsToExtension(activeFocusIdentifiers: [])
     }
 }
 
 struct BlockingView: View {
     @ObservedObject var model: BlockingModel
     @ObservedObject var purchases: PurchaseModel
+    @ObservedObject var focus: FocusMonitor
+
+    /// Says plainly what Quiet currently believes, including that it does not know. A
+    /// blocker that quietly guesses is worse than one that admits the gap.
+    @ViewBuilder
+    private var focusStatus: some View {
+        if let name = model.activeFocusName {
+            Label("\(name) is running, so Quiet is blocking.", systemImage: "moon.fill")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        } else if focus.lastReconcileFailed {
+            Label("Quiet could not tell whether a Focus is running.", systemImage: "questionmark.circle")
+                .font(.caption)
+                .foregroundStyle(.orange)
+        } else {
+            Label("No Focus is running, so nothing is blocked.", systemImage: "moon")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+    }
 
     var body: some View {
         List {
@@ -210,6 +283,61 @@ struct BlockingView: View {
                             .buttonStyle(.borderless)
                     }
                 }
+            }
+
+            Section("When to block") {
+                Picker("Block", selection: Binding(
+                    get: { model.blocksAlways },
+                    set: { model.blocksAlways = $0 }
+                )) {
+                    Text("All the time").tag(true)
+                    Text("Only during a Focus").tag(false)
+                }
+                .pickerStyle(.radioGroup)
+
+                if !model.blocksAlways {
+                    focusStatus
+                }
+            }
+
+            Section("Focus") {
+                if model.blocksAlways {
+                    Text("Not in use while Quiet is blocking all the time.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Text("macOS does not let an app ask which Focus is running, so you connect them by hand: add a name here, then pick that name in System Settings under Focus Filters. Do this once per Focus.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                HStack {
+                    TextField("Work", text: $model.newFocusName)
+                        .textFieldStyle(.roundedBorder)
+                        .onSubmit { model.addFocusProfile() }
+                    Button("Add") { model.addFocusProfile() }
+                }
+                if let error = model.focusError {
+                    Text(error).font(.caption).foregroundStyle(.red)
+                }
+
+                HStack {
+                    Text(FocusPolicy.anyFocus.name)
+                    Spacer()
+                    Text("Always available")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                ForEach(model.policy.focusProfiles) { profile in
+                    HStack {
+                        Text(profile.name)
+                        Spacer()
+                        Button("Remove") { model.removeFocusProfile(profile) }
+                            .buttonStyle(.borderless)
+                    }
+                }
+
+                Button("Open Focus Settings…") { model.openFocusSettings() }
             }
 
             Section {
