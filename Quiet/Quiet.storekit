@@ -1,0 +1,35 @@
+{
+  "identifier" : "A1B2C3D4",
+  "nonRenewingSubscriptions" : [],
+  "products" : [
+    {
+      "displayPrice" : "24.99",
+      "familyShareable" : true,
+      "internalID" : "QUIETPRO01",
+      "localizations" : [
+        {
+          "description" : "Unlock every site, unlimited blocking, and app blocking. One payment, no subscription.",
+          "displayName" : "Quiet Pro",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.app.Quiet.pro",
+      "referenceName" : "Quiet Pro",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "QUIET",
+    "_developerTeamID" : "CU82DCKHTL",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 0,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : []
+  },
+  "subscriptionGroups" : [],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

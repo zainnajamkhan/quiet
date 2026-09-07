@@ -11,11 +11,17 @@ import QuietCore
 
 struct RuleEditorView: View {
     let ruleset: Ruleset
+    @ObservedObject var purchases: PurchaseModel
     @State private var preferences: [String: Bool]
 
-    init(ruleset: Ruleset, initialPreferences: [String: Bool]) {
+    init(ruleset: Ruleset, initialPreferences: [String: Bool], purchases: PurchaseModel) {
         self.ruleset = ruleset
+        self.purchases = purchases
         _preferences = State(initialValue: initialPreferences)
+    }
+
+    private var remainingFreeSites: Int {
+        FreeTierPolicy.remainingFreeSites(ruleset: ruleset, preferences: preferences)
     }
 
     var body: some View {
@@ -27,25 +33,52 @@ struct RuleEditorView: View {
                         .font(.callout)
                 }
             }
+
+            if !purchases.isPro {
+                Section {
+                    PaywallView(purchases: purchases)
+                    Text("Free: \(FreeTierPolicy.freeSiteLimit) sites at a time. \(remainingFreeSites) remaining.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
             ForEach(ruleset.sites) { site in
                 Section(site.name) {
                     ForEach(site.features) { feature in
-                        Toggle(isOn: binding(for: feature)) {
-                            VStack(alignment: .leading) {
-                                Text(feature.name)
-                                if let summary = feature.summary {
-                                    Text(summary)
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-                                }
-                            }
-                        }
+                        featureRow(feature, in: site)
                     }
                 }
             }
         }
-        .frame(minWidth: 420, minHeight: 320)
-        .navigationTitle("Quiet Rules")
+    }
+
+    @ViewBuilder
+    private func featureRow(_ feature: Feature, in site: Site) -> some View {
+        let allowed = FreeTierPolicy.canEnable(
+            feature: feature,
+            in: site,
+            ruleset: ruleset,
+            preferences: preferences,
+            isPro: purchases.isPro
+        )
+
+        Toggle(isOn: binding(for: feature)) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(feature.name)
+                if let summary = feature.summary {
+                    Text(summary)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                if !allowed {
+                    Text("Needs Quiet Pro: you are using your \(FreeTierPolicy.freeSiteLimit) free sites.")
+                        .font(.caption)
+                        .foregroundStyle(.orange)
+                }
+            }
+        }
+        .disabled(!allowed)
     }
 
     private func binding(for feature: Feature) -> Binding<Bool> {
@@ -59,21 +92,28 @@ struct RuleEditorView: View {
     }
 
     private func persist() {
-        try? SharedStateStore.save(SharedState(preferences: preferences))
+        let existing = SharedStateStore.load()
+        try? SharedStateStore.save(
+            SharedState(preferences: preferences, blockedHosts: existing.blockedHosts)
+        )
     }
 }
 
 enum RuleEditorLoader {
-    /// Loads the app's own bundled copy of the ruleset (kept in sync by hand with the
-    /// extension's copy for now, see Tools/test.sh) merged with whatever the shared state
-    /// file already has, so reopening the window does not reset every toggle to default.
-    static func makeView() -> RuleEditorView? {
+    static func loadRuleset() -> Ruleset? {
         guard let url = Bundle.main.url(forResource: "ruleset", withExtension: "json"),
               let data = try? Data(contentsOf: url),
               let ruleset = try? Ruleset.decode(from: data)
         else { return nil }
+        return ruleset
+    }
 
-        let stored = SharedStateStore.load().preferences
-        return RuleEditorView(ruleset: ruleset, initialPreferences: stored)
+    static func makeView(purchases: PurchaseModel) -> RuleEditorView? {
+        guard let ruleset = loadRuleset() else { return nil }
+        return RuleEditorView(
+            ruleset: ruleset,
+            initialPreferences: SharedStateStore.load().preferences,
+            purchases: purchases
+        )
     }
 }

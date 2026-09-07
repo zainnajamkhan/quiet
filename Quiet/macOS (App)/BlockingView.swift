@@ -142,9 +142,19 @@ final class BlockingModel: ObservableObject {
 
 struct BlockingView: View {
     @ObservedObject var model: BlockingModel
+    @ObservedObject var purchases: PurchaseModel
 
     var body: some View {
         List {
+            if !purchases.isPro {
+                Section {
+                    PaywallView(purchases: purchases)
+                    Text("Blocking sites and apps is part of Quiet Pro. Hiding distractions stays free.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
             if !model.isAccessibilityTrusted {
                 Section {
                     VStack(alignment: .leading, spacing: 8) {
@@ -209,5 +219,6 @@ struct BlockingView: View {
             }
         }
         .frame(minWidth: 460, minHeight: 420)
+        .disabled(!purchases.isPro)
     }
 }

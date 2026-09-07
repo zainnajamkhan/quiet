@@ -16,6 +16,7 @@ struct MainWindowView: View {
 
     let ruleEditor: RuleEditorView?
     @ObservedObject var blockingModel: BlockingModel
+    @ObservedObject var purchases: PurchaseModel
 
     var body: some View {
         TabView {
@@ -32,7 +33,7 @@ struct MainWindowView: View {
             }
             .tabItem { Label("Hide", systemImage: "eye.slash") }
 
-            BlockingView(model: blockingModel)
+            BlockingView(model: blockingModel, purchases: purchases)
                 .tabItem { Label("Block", systemImage: "hand.raised") }
         }
         .frame(minWidth: 520, minHeight: 460)

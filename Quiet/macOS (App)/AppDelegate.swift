@@ -16,6 +16,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var mainWindow: NSWindow?
     private var blocker: AppBlockerService?
     private var blockingModel: BlockingModel?
+    private let purchases = PurchaseModel()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         let blocker = AppBlockerService(policyProvider: { BlockPolicyStore.load() })
@@ -36,6 +37,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(withTitle: "Quit Quiet", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         item.menu = menu
         statusItem = item
+
+        Task { await purchases.start() }
 
         showMainWindow()
     }
@@ -63,7 +66,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         guard let blockingModel else { return }
-        let root = MainWindowView(ruleEditor: RuleEditorLoader.makeView(), blockingModel: blockingModel)
+        let root = MainWindowView(
+            ruleEditor: RuleEditorLoader.makeView(purchases: purchases),
+            blockingModel: blockingModel,
+            purchases: purchases
+        )
 
         let window = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 520, height: 460),
