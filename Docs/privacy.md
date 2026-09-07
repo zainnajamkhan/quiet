@@ -2,6 +2,10 @@
 
 _Last updated: 7 September 2026_
 
+> Published at <https://zainnajamkhan.github.io/quiet-rules/privacy.html>, which is the
+> URL given to App Store Connect. That copy is the one people read, so edits here have to
+> be carried over to the `quiet-rules` repository or the two will drift.
+
 Quiet does not collect anything about you.
 
 There are no accounts, no analytics, no tracking, no advertising identifiers, and no

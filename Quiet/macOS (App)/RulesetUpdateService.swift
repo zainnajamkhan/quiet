@@ -70,7 +70,7 @@ struct CloudKitRulesetSource: RulesetSource {
 /// whether it is safe to run.
 struct HTTPRulesetSource: RulesetSource {
 
-    static let url: URL? = nil
+    static let url: URL? = URL(string: "https://zainnajamkhan.github.io/quiet-rules/ruleset.json")
 
     let url: URL
 
