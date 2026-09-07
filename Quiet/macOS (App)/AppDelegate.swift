@@ -9,7 +9,6 @@ import Cocoa
 import SwiftUI
 import QuietCore
 
-@main
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     private var statusItem: NSStatusItem?
@@ -17,6 +16,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var blocker: AppBlockerService?
     private var blockingModel: BlockingModel?
     private let purchases = PurchaseModel()
+    private let extensionStatus = ExtensionStatusModel()
+    private var onboardingWindow: NSWindow?
+
+    private static let onboardingCompletedKey = "quiet.onboardingCompleted"
+    private var hasCompletedOnboarding: Bool {
+        get { UserDefaults.standard.bool(forKey: Self.onboardingCompletedKey) }
+        set { UserDefaults.standard.set(newValue, forKey: Self.onboardingCompletedKey) }
+    }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         let blocker = AppBlockerService(policyProvider: { BlockPolicyStore.load() })
@@ -39,8 +46,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem = item
 
         Task { await purchases.start() }
+        extensionStatus.refresh()
 
-        showMainWindow()
+        if hasCompletedOnboarding {
+            showMainWindow()
+        } else {
+            showOnboarding()
+        }
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
@@ -56,8 +68,40 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         blocker?.stop()
     }
 
+    private func showOnboarding() {
+        if let onboardingWindow {
+            onboardingWindow.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            return
+        }
+
+        let root = OnboardingView(extensionStatus: extensionStatus) { [weak self] in
+            guard let self else { return }
+            self.hasCompletedOnboarding = true
+            self.onboardingWindow?.close()
+            self.onboardingWindow = nil
+            self.showMainWindow()
+        }
+
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 560, height: 480),
+            styleMask: [.titled, .closable, .miniaturizable],
+            backing: .buffered,
+            defer: false
+        )
+        window.title = "Welcome to Quiet"
+        window.contentView = NSHostingView(rootView: root)
+        window.center()
+        window.isReleasedWhenClosed = false
+
+        onboardingWindow = window
+        window.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
     @objc private func showMainWindow() {
         blockingModel?.refreshAccessibility()
+        extensionStatus.refresh()
 
         if let mainWindow {
             mainWindow.makeKeyAndOrderFront(nil)
@@ -69,7 +113,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let root = MainWindowView(
             ruleEditor: RuleEditorLoader.makeView(purchases: purchases),
             blockingModel: blockingModel,
-            purchases: purchases
+            purchases: purchases,
+            extensionStatus: extensionStatus
         )
 
         let window = NSWindow(

@@ -17,8 +17,31 @@ struct MainWindowView: View {
     let ruleEditor: RuleEditorView?
     @ObservedObject var blockingModel: BlockingModel
     @ObservedObject var purchases: PurchaseModel
+    @ObservedObject var extensionStatus: ExtensionStatusModel
 
     var body: some View {
+        VStack(spacing: 0) {
+            if extensionStatus.state == .disabled {
+                HStack(spacing: 10) {
+                    Label(
+                        "The Quiet extension is switched off in Safari, so nothing is being hidden.",
+                        systemImage: "exclamationmark.triangle.fill"
+                    )
+                    .foregroundStyle(.orange)
+                    .font(.callout)
+                    Spacer()
+                    Button("Open Safari Settings…") { extensionStatus.openSafariSettings() }
+                }
+                .padding(10)
+                .background(.orange.opacity(0.12))
+            }
+
+            tabs
+        }
+        .onAppear { extensionStatus.refresh() }
+    }
+
+    private var tabs: some View {
         TabView {
             Group {
                 if let ruleEditor {
