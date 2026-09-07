@@ -55,11 +55,19 @@ struct CloudKitRulesetSource: RulesetSource {
     }
 }
 
-/// A plain signed HTTPS fetch of the same JSON.
+/// A plain HTTPS fetch of the same JSON.
 ///
-/// Present because it is the only delivery path that can be exercised without a paid
-/// membership, so the whole pipeline around it is real and testable today rather than
-/// waiting on an account. Swapping to CloudKit later is one line in `makeSource`.
+/// The chosen delivery path for now, because it is the only one that works without a paid
+/// membership: any static host will do, including GitHub Pages, and it costs nothing.
+/// Swapping to CloudKit later is one line in `makeSource`.
+///
+/// To switch it on, set `url` to wherever `Rules/published/ruleset.json` is served from.
+/// `Tools/publish-ruleset.sh` stages that file and refuses to publish a version that no
+/// app would adopt. Nil means no delivery, and Quiet runs on its bundled rules.
+///
+/// The response is not trusted because it arrived over TLS: it goes through the same
+/// validation as any other candidate before it can be installed. TLS says who sent it, not
+/// whether it is safe to run.
 struct HTTPRulesetSource: RulesetSource {
 
     static let url: URL? = nil

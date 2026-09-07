@@ -13,7 +13,7 @@ node Tools/make-selector-check.js
 
 echo
 echo "==> JavaScript engines"
-node --test Extension/tests/rules-engine.test.js Extension/tests/schedule-engine.test.js Extension/tests/friction-engine.test.js Extension/tests/selector-check-snippet.test.js
+node --test Extension/tests/rules-engine.test.js Extension/tests/schedule-engine.test.js Extension/tests/selector-check-snippet.test.js
 
 echo
 echo "==> Swift ruleset and schedule engines"

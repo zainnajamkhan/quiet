@@ -1,7 +1,7 @@
 # Quiet
 
 A Safari extension that removes the addictive parts of sites you still need, plus a Mac
-app that blocks sites and apps outright. One purchase, every Apple device.
+app that blocks sites and apps outright. One purchase, no subscription.
 
 Plan and market research: `../mac-apps/01-quiet.md`.
 

@@ -141,7 +141,7 @@ struct ProScreen: View {
                             .foregroundStyle(.green)
                         Text("You have Quiet Pro")
                             .font(.title2.weight(.semibold))
-                        Text("Everything is unlocked, on every Apple device signed in to this account.")
+                        Text("Everything is unlocked.")
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
                     }

@@ -8,23 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		206D898F50D4A29735A1BD3D /* QuietCore in Frameworks */ = {isa = PBXBuildFile; productRef = 9704EE3B4D2426EE434FE056 /* QuietCore */; };
-		24515E9102F9565361E03773 /* QuietCore in Frameworks */ = {isa = PBXBuildFile; productRef = F03D0E6621DE3C5E2B94F2AC /* QuietCore */; };
-		55DF5F3B41000BBDE8DBF80D /* IndieKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0D5E79A5B360742653F5EA79 /* IndieKit */; };
-		AC298F90304DE9B7003A0093 /* Quiet Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AC298F8F304DE9B7003A0093 /* Quiet Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		AC298F9A304DE9B7003A0093 /* Quiet Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AC298F99304DE9B7003A0093 /* Quiet Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		B743AFAE82B94A4732DE897D /* IndieKit in Frameworks */ = {isa = PBXBuildFile; productRef = A986A9D5AB4046F6F7BBE3A7 /* IndieKit */; };
-		CBC1E6545C77B99A1C92F80F /* QuietCore in Frameworks */ = {isa = PBXBuildFile; productRef = 10B6406459E92325CB4FF157 /* QuietCore */; };
 		ED410153C6B51A3711AF4B98 /* QuietCore in Frameworks */ = {isa = PBXBuildFile; productRef = ECECF32D9AA2D828697A1867 /* QuietCore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		AC298F91304DE9B7003A0093 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = AC298F56304DE9B6003A0093 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = AC298F8E304DE9B7003A0093;
-			remoteInfo = "Quiet Extension (iOS)";
-		};
 		AC298F9B304DE9B7003A0093 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = AC298F56304DE9B6003A0093 /* Project object */;
@@ -35,17 +24,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		AC298FC2304DE9B7003A0093 /* Embed Foundation Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				AC298F90304DE9B7003A0093 /* Quiet Extension.appex in Embed Foundation Extensions */,
-			);
-			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		AC298FCC304DE9B7003A0093 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -68,41 +46,10 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		AC298FBD304DE9B7003A0093 /* Exceptions for "Shared (App)" folder in "Quiet (iOS)" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"/Localized: Resources/Main.html",
-				Assets.xcassets,
-				Resources/Icon.png,
-				Resources/Script.js,
-				Resources/Style.css,
-				ViewController.swift,
-			);
-			target = AC298F71304DE9B7003A0093 /* Quiet (iOS) */;
-		};
-		AC298FC1304DE9B7003A0093 /* Exceptions for "iOS (Extension)" folder in "Quiet Extension (iOS)" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = AC298F8E304DE9B7003A0093 /* Quiet Extension (iOS) */;
-		};
-		AC298FC6304DE9B7003A0093 /* Exceptions for "iOS (App)" folder in "Quiet (iOS)" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = AC298F71304DE9B7003A0093 /* Quiet (iOS) */;
-		};
 		AC298FC7304DE9B7003A0093 /* Exceptions for "Shared (App)" folder in "Quiet (macOS)" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"/Localized: Resources/Main.html",
 				Assets.xcassets,
-				Resources/Icon.png,
-				Resources/Script.js,
-				Resources/Style.css,
-				ViewController.swift,
 			);
 			target = AC298F83304DE9B7003A0093 /* Quiet (macOS) */;
 		};
@@ -113,32 +60,12 @@
 			);
 			target = AC298F98304DE9B7003A0093 /* Quiet Extension (macOS) */;
 		};
-		AC298FD0304DE9B7003A0093 /* Exceptions for "Shared (Extension)" folder in "Quiet Extension (iOS)" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Resources/_locales,
-				Resources/background.js,
-				Resources/content.js,
-				"Resources/friction-engine.js",
-				Resources/images,
-				Resources/manifest.json,
-				Resources/popup.css,
-				Resources/popup.html,
-				Resources/popup.js,
-				"Resources/rules-engine.js",
-				Resources/ruleset.json,
-				"Resources/schedule-engine.js",
-				SafariWebExtensionHandler.swift,
-			);
-			target = AC298F8E304DE9B7003A0093 /* Quiet Extension (iOS) */;
-		};
 		AC298FD1304DE9B7003A0093 /* Exceptions for "Shared (Extension)" folder in "Quiet Extension (macOS)" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Resources/_locales,
 				Resources/background.js,
 				Resources/content.js,
-				"Resources/friction-engine.js",
 				Resources/images,
 				Resources/manifest.json,
 				Resources/popup.css,
@@ -157,7 +84,6 @@
 		AC298F5A304DE9B6003A0093 /* Shared (App) */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				AC298FBD304DE9B7003A0093 /* Exceptions for "Shared (App)" folder in "Quiet (iOS)" target */,
 				AC298FC7304DE9B7003A0093 /* Exceptions for "Shared (App)" folder in "Quiet (macOS)" target */,
 			);
 			path = "Shared (App)";
@@ -166,7 +92,6 @@
 		AC298F63304DE9B7003A0093 /* Shared (Extension) */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				AC298FD0304DE9B7003A0093 /* Exceptions for "Shared (Extension)" folder in "Quiet Extension (iOS)" target */,
 				AC298FD1304DE9B7003A0093 /* Exceptions for "Shared (Extension)" folder in "Quiet Extension (macOS)" target */,
 			);
 			explicitFolders = (
@@ -176,25 +101,9 @@
 			path = "Shared (Extension)";
 			sourceTree = "<group>";
 		};
-		AC298F74304DE9B7003A0093 /* iOS (App) */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				AC298FC6304DE9B7003A0093 /* Exceptions for "iOS (App)" folder in "Quiet (iOS)" target */,
-			);
-			path = "iOS (App)";
-			sourceTree = "<group>";
-		};
 		AC298F85304DE9B7003A0093 /* macOS (App) */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "macOS (App)";
-			sourceTree = "<group>";
-		};
-		AC298F93304DE9B7003A0093 /* iOS (Extension) */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				AC298FC1304DE9B7003A0093 /* Exceptions for "iOS (Extension)" folder in "Quiet Extension (iOS)" target */,
-			);
-			path = "iOS (Extension)";
 			sourceTree = "<group>";
 		};
 		AC298F9D304DE9B7003A0093 /* macOS (Extension) */ = {
@@ -208,29 +117,12 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		AC298F6F304DE9B7003A0093 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CBC1E6545C77B99A1C92F80F /* QuietCore in Frameworks */,
-				55DF5F3B41000BBDE8DBF80D /* IndieKit in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		AC298F81304DE9B7003A0093 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				206D898F50D4A29735A1BD3D /* QuietCore in Frameworks */,
 				B743AFAE82B94A4732DE897D /* IndieKit in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		AC298F8C304DE9B7003A0093 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				24515E9102F9565361E03773 /* QuietCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -250,9 +142,7 @@
 			children = (
 				AC298F5A304DE9B6003A0093 /* Shared (App) */,
 				AC298F63304DE9B7003A0093 /* Shared (Extension) */,
-				AC298F74304DE9B7003A0093 /* iOS (App) */,
 				AC298F85304DE9B7003A0093 /* macOS (App) */,
-				AC298F93304DE9B7003A0093 /* iOS (Extension) */,
 				AC298F9D304DE9B7003A0093 /* macOS (Extension) */,
 				AC298F73304DE9B7003A0093 /* Products */,
 				C5DF7CFB2B91E8EE405FDD04 /* Quiet.storekit */,
@@ -273,32 +163,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		AC298F71304DE9B7003A0093 /* Quiet (iOS) */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = AC298FC3304DE9B7003A0093 /* Build configuration list for PBXNativeTarget "Quiet (iOS)" */;
-			buildPhases = (
-				AC298F6E304DE9B7003A0093 /* Sources */,
-				AC298F6F304DE9B7003A0093 /* Frameworks */,
-				AC298F70304DE9B7003A0093 /* Resources */,
-				AC298FC2304DE9B7003A0093 /* Embed Foundation Extensions */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				AC298F92304DE9B7003A0093 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				AC298F74304DE9B7003A0093 /* iOS (App) */,
-			);
-			name = "Quiet (iOS)";
-			packageProductDependencies = (
-				10B6406459E92325CB4FF157 /* QuietCore */,
-				0D5E79A5B360742653F5EA79 /* IndieKit */,
-			);
-			productName = "Quiet (iOS)";
-			productReference = AC298F72304DE9B7003A0093 /* Quiet.app */;
-			productType = "com.apple.product-type.application";
-		};
 		AC298F83304DE9B7003A0093 /* Quiet (macOS) */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = AC298FCD304DE9B7003A0093 /* Build configuration list for PBXNativeTarget "Quiet (macOS)" */;
@@ -324,29 +188,6 @@
 			productName = "Quiet (macOS)";
 			productReference = AC298F84304DE9B7003A0093 /* Quiet.app */;
 			productType = "com.apple.product-type.application";
-		};
-		AC298F8E304DE9B7003A0093 /* Quiet Extension (iOS) */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = AC298FBE304DE9B7003A0093 /* Build configuration list for PBXNativeTarget "Quiet Extension (iOS)" */;
-			buildPhases = (
-				AC298F8B304DE9B7003A0093 /* Sources */,
-				AC298F8C304DE9B7003A0093 /* Frameworks */,
-				AC298F8D304DE9B7003A0093 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				AC298F93304DE9B7003A0093 /* iOS (Extension) */,
-			);
-			name = "Quiet Extension (iOS)";
-			packageProductDependencies = (
-				F03D0E6621DE3C5E2B94F2AC /* QuietCore */,
-			);
-			productName = "Quiet Extension (iOS)";
-			productReference = AC298F8F304DE9B7003A0093 /* Quiet Extension.appex */;
-			productType = "com.apple.product-type.app-extension";
 		};
 		AC298F98304DE9B7003A0093 /* Quiet Extension (macOS) */ = {
 			isa = PBXNativeTarget;
@@ -381,13 +222,7 @@
 				LastSwiftUpdateCheck = 2640;
 				LastUpgradeCheck = 2640;
 				TargetAttributes = {
-					AC298F71304DE9B7003A0093 = {
-						CreatedOnToolsVersion = 26.4;
-					};
 					AC298F83304DE9B7003A0093 = {
-						CreatedOnToolsVersion = 26.4;
-					};
-					AC298F8E304DE9B7003A0093 = {
 						CreatedOnToolsVersion = 26.4;
 					};
 					AC298F98304DE9B7003A0093 = {
@@ -413,30 +248,14 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				AC298F71304DE9B7003A0093 /* Quiet (iOS) */,
 				AC298F83304DE9B7003A0093 /* Quiet (macOS) */,
-				AC298F8E304DE9B7003A0093 /* Quiet Extension (iOS) */,
 				AC298F98304DE9B7003A0093 /* Quiet Extension (macOS) */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		AC298F70304DE9B7003A0093 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		AC298F82304DE9B7003A0093 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		AC298F8D304DE9B7003A0093 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -453,21 +272,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		AC298F6E304DE9B7003A0093 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		AC298F80304DE9B7003A0093 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		AC298F8B304DE9B7003A0093 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -484,11 +289,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		AC298F92304DE9B7003A0093 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = AC298F8E304DE9B7003A0093 /* Quiet Extension (iOS) */;
-			targetProxy = AC298F91304DE9B7003A0093 /* PBXContainerItemProxy */;
-		};
 		AC298F9C304DE9B7003A0093 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = AC298F98304DE9B7003A0093 /* Quiet Extension (macOS) */;
@@ -497,162 +297,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		AC298FBF304DE9B7003A0093 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "Entitlements/QuietExtension-iOS.entitlements";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = CU82DCKHTL;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Quiet Extension";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				OTHER_LDFLAGS = (
-					"-framework",
-					SafariServices,
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.app.Quiet.Extension;
-				PRODUCT_NAME = "Quiet Extension";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		AC298FC0304DE9B7003A0093 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "Entitlements/QuietExtension-iOS.entitlements";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = CU82DCKHTL;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Quiet Extension";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				OTHER_LDFLAGS = (
-					"-framework",
-					SafariServices,
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.app.Quiet.Extension;
-				PRODUCT_NAME = "Quiet Extension";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		AC298FC4304DE9B7003A0093 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "Entitlements/Quiet-iOS.entitlements";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = CU82DCKHTL;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "iOS (App)/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Quiet;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				OTHER_LDFLAGS = (
-					"-framework",
-					SafariServices,
-					"-framework",
-					WebKit,
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.app.Quiet;
-				PRODUCT_NAME = Quiet;
-				SDKROOT = iphoneos;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		AC298FC5304DE9B7003A0093 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "Entitlements/Quiet-iOS.entitlements";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = CU82DCKHTL;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "iOS (App)/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Quiet;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				OTHER_LDFLAGS = (
-					"-framework",
-					SafariServices,
-					"-framework",
-					WebKit,
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.app.Quiet;
-				PRODUCT_NAME = Quiet;
-				SDKROOT = iphoneos;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
 		AC298FC9304DE9B7003A0093 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -935,24 +579,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AC298FBE304DE9B7003A0093 /* Build configuration list for PBXNativeTarget "Quiet Extension (iOS)" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				AC298FBF304DE9B7003A0093 /* Debug */,
-				AC298FC0304DE9B7003A0093 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		AC298FC3304DE9B7003A0093 /* Build configuration list for PBXNativeTarget "Quiet (iOS)" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				AC298FC4304DE9B7003A0093 /* Debug */,
-				AC298FC5304DE9B7003A0093 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		AC298FC8304DE9B7003A0093 /* Build configuration list for PBXNativeTarget "Quiet Extension (macOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -985,16 +611,6 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		0D5E79A5B360742653F5EA79 /* IndieKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "../Packages/IndieKit" */;
-			productName = IndieKit;
-		};
-		10B6406459E92325CB4FF157 /* QuietCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "../Packages/QuietCore" */;
-			productName = QuietCore;
-		};
 		9704EE3B4D2426EE434FE056 /* QuietCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "../Packages/QuietCore" */;
@@ -1006,11 +622,6 @@
 			productName = IndieKit;
 		};
 		ECECF32D9AA2D828697A1867 /* QuietCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "../Packages/QuietCore" */;
-			productName = QuietCore;
-		};
-		F03D0E6621DE3C5E2B94F2AC /* QuietCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "../Packages/QuietCore" */;
 			productName = QuietCore;
