@@ -326,6 +326,8 @@ struct BlockingView: View {
                         .onSubmit { model.addFocusProfile() }
                     Button("Add") { model.addFocusProfile() }
                 }
+                .disabled(isLocked)
+
                 if let error = model.focusError {
                     Text(error).font(.caption).foregroundStyle(.red)
                 }
@@ -333,7 +335,7 @@ struct BlockingView: View {
                 HStack {
                     Text(FocusPolicy.anyFocus.name)
                     Spacer()
-                    Text("Always available")
+                    Text("Offered in System Settings without adding anything here")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -343,12 +345,16 @@ struct BlockingView: View {
                         Spacer()
                         Button("Remove") { model.removeFocusProfile(profile) }
                             .buttonStyle(.borderless)
+                            .disabled(isLocked)
                     }
                 }
 
+                // Deliberately not gated behind Pro. This only opens System Settings, and
+                // adding Quiet as a Focus Filter is a one time OS level step someone may
+                // reasonably want to do, or just look at, before paying. A disabled button
+                // here reads as the app being broken rather than as a locked feature.
                 Button("Open Focus Settings…") { model.openFocusSettings() }
             }
-            .disabled(isLocked)
 
             Section {
                 Text("Blocked apps are hidden when they open, not force quit: macOS does not let a sandboxed app quit another one. A determined user can still reopen them.")
