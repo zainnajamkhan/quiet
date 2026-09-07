@@ -9,94 +9,80 @@
 import SwiftUI
 import QuietCore
 
+/// One job: get the Safari extension switched on.
+///
+/// This is the single biggest drop off point for a Safari extension app. Safari ships new
+/// extensions disabled and never prompts, so someone who does not know to go and enable it
+/// concludes the app is broken. Everything else the app can explain later, in place.
 struct OnboardingView: View {
 
     @ObservedObject var extensionStatus: ExtensionStatusModel
     let onFinish: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 18) {
-            VStack(alignment: .leading, spacing: 6) {
-                Text("Welcome to Quiet")
+        VStack(spacing: 0) {
+            VStack(spacing: 10) {
+                Image(systemName: "eye.slash.fill")
+                    .font(.system(size: 40))
+                    .foregroundStyle(.tint)
+                Text("Quiet")
                     .font(.largeTitle.weight(.semibold))
-                Text("Keep the sites you need. Lose the parts that eat you.")
+                Text("Keep the sites you need.\nLose the parts that eat you.")
+                    .multilineTextAlignment(.center)
                     .foregroundStyle(.secondary)
             }
+            .frame(maxWidth: .infinity)
+            .padding(.top, 44)
+            .padding(.bottom, 30)
 
-            Divider()
+            VStack(spacing: 14) {
+                Text("Safari ships new extensions switched off.")
+                    .font(.headline)
 
-            step(
-                number: 1,
-                title: "Turn on the Quiet extension in Safari",
-                detail: "Safari ships new extensions switched off and never asks. Quiet cannot change anything on a page until you switch it on."
-            ) {
-                VStack(alignment: .leading, spacing: 10) {
-                    statusRow
-                    HStack {
-                        Button("Open Safari Settings…") { extensionStatus.openSafariSettings() }
-                            .buttonStyle(.borderedProminent)
-                        Button("Check Again") { extensionStatus.refresh() }
-                    }
-                }
+                statusCard
+
+                Button("Open Safari Settings…") { extensionStatus.openSafariSettings() }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.large)
             }
+            .padding(.horizontal, 40)
 
-            step(
-                number: 2,
-                title: "Choose what to hide",
-                detail: "Quiet starts with sensible defaults on YouTube. Everything is a toggle, and nothing is hidden that you did not ask for."
-            ) { EmptyView() }
-
-            Spacer()
+            Spacer(minLength: 20)
 
             HStack {
+                Button("Check Again") { extensionStatus.refresh() }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(.secondary)
                 Spacer()
-                Button(extensionStatus.isEnabled ? "Start using Quiet" : "Skip for now") {
-                    onFinish()
-                }
-                .keyboardShortcut(.defaultAction)
+                Button(extensionStatus.isEnabled ? "Start" : "Skip for now", action: onFinish)
+                    .keyboardShortcut(.defaultAction)
             }
+            .padding(20)
         }
-        .padding(28)
-        .frame(minWidth: 560, minHeight: 480)
+        .frame(minWidth: 460, minHeight: 460)
         .onAppear { extensionStatus.refresh() }
     }
 
-    @ViewBuilder
-    private var statusRow: some View {
-        switch extensionStatus.state {
-        case .enabled:
-            Label("Extension is on", systemImage: "checkmark.circle.fill")
-                .foregroundStyle(.green)
-        case .disabled:
-            Label("Extension is off", systemImage: "xmark.circle.fill")
-                .foregroundStyle(.orange)
-        case .unknown:
-            Label("Checking…", systemImage: "clock")
-                .foregroundStyle(.secondary)
-        case .failed(let message):
-            Label("Could not check: \(message)", systemImage: "exclamationmark.triangle.fill")
-                .foregroundStyle(.red)
+    private var statusCard: some View {
+        HStack(spacing: 10) {
+            Image(systemName: status.symbol)
+                .foregroundStyle(status.tint)
+            Text(status.text)
+            Spacer()
         }
+        .font(.callout)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 11)
+        .frame(maxWidth: .infinity)
+        .background(status.tint.opacity(0.12), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
     }
 
-    @ViewBuilder
-    private func step<Content: View>(
-        number: Int,
-        title: String,
-        detail: String,
-        @ViewBuilder content: () -> Content
-    ) -> some View {
-        HStack(alignment: .top, spacing: 12) {
-            Text("\(number)")
-                .font(.headline)
-                .frame(width: 26, height: 26)
-                .background(.quaternary, in: Circle())
-
-            VStack(alignment: .leading, spacing: 6) {
-                Text(title).font(.headline)
-                Text(detail).font(.callout).foregroundStyle(.secondary)
-                content()
-            }
+    private var status: (symbol: String, text: String, tint: Color) {
+        switch extensionStatus.state {
+        case .enabled: ("checkmark.circle.fill", "Quiet is on in Safari", .green)
+        case .disabled: ("xmark.circle.fill", "Quiet is off in Safari", .orange)
+        case .unknown: ("clock", "Checking…", .secondary)
+        case .failed(let message): ("exclamationmark.triangle.fill", message, .red)
         }
     }
 }

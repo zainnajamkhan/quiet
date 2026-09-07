@@ -30,16 +30,13 @@ final class AppBlockerService {
 
     private let policyProvider: () -> BlockPolicy
     private let sessionProvider: () -> BlockSession?
-    private let focusProvider: () -> [String]
 
     init(
         policyProvider: @escaping () -> BlockPolicy,
-        sessionProvider: @escaping () -> BlockSession? = { nil },
-        focusProvider: @escaping () -> [String] = { [] }
+        sessionProvider: @escaping () -> BlockSession? = { nil }
     ) {
         self.policyProvider = policyProvider
         self.sessionProvider = sessionProvider
-        self.focusProvider = focusProvider
     }
 
     var isAccessibilityTrusted: Bool {
@@ -98,8 +95,7 @@ final class AppBlockerService {
             policy: policyProvider(),
             session: sessionProvider(),
             now: Date(),
-            moment: ScheduleMoment.now(),
-            activeFocusIdentifiers: focusProvider()
+            moment: ScheduleMoment.now()
         )
         guard blocked else { return }
 

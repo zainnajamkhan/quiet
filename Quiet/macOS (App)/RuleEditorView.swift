@@ -10,13 +10,22 @@ import SwiftUI
 import QuietCore
 
 struct RuleEditorView: View {
+
     let ruleset: Ruleset
     @ObservedObject var purchases: PurchaseModel
+    var onShowPro: () -> Void = {}
+
     @State private var preferences: [String: Bool]
 
-    init(ruleset: Ruleset, initialPreferences: [String: Bool], purchases: PurchaseModel) {
+    init(
+        ruleset: Ruleset,
+        initialPreferences: [String: Bool],
+        purchases: PurchaseModel,
+        onShowPro: @escaping () -> Void = {}
+    ) {
         self.ruleset = ruleset
         self.purchases = purchases
+        self.onShowPro = onShowPro
         _preferences = State(initialValue: initialPreferences)
     }
 
@@ -25,32 +34,47 @@ struct RuleEditorView: View {
     }
 
     var body: some View {
-        List {
+        VStack(spacing: 0) {
             if !SharedStateStore.isUsingAppGroup {
-                Section {
-                    Label(SharedStateStore.storageDescription, systemImage: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.orange)
-                        .font(.callout)
-                }
+                NoticeBar(
+                    symbol: "exclamationmark.triangle.fill",
+                    message: "Settings are not reaching the extension. Nothing will be hidden.",
+                    actionTitle: "Details",
+                    tint: .red
+                ) {}
+                .help(SharedStateStore.storageDescription)
+            } else if !purchases.isPro {
+                NoticeBar(
+                    symbol: "sparkles",
+                    message: freeTierMessage,
+                    actionTitle: "See Quiet Pro",
+                    tint: .accentColor,
+                    action: onShowPro
+                )
             }
 
-            if !purchases.isPro {
-                Section {
-                    PaywallView(purchases: purchases)
-                    Text("Free: \(FreeTierPolicy.freeSiteLimit) sites at a time. \(remainingFreeSites) remaining.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
-
-            ForEach(ruleset.sites) { site in
-                Section(site.name) {
-                    ForEach(site.features) { feature in
-                        featureRow(feature, in: site)
+            Form {
+                ForEach(ruleset.sites) { site in
+                    Section {
+                        ForEach(site.features) { feature in
+                            featureRow(feature, in: site)
+                        }
+                    } header: {
+                        HStack(spacing: 8) {
+                            SiteMonogram(domain: site.name, size: 20)
+                            Text(site.name)
+                        }
                     }
                 }
             }
+            .formStyle(.grouped)
         }
+    }
+
+    private var freeTierMessage: String {
+        remainingFreeSites > 0
+            ? "Free on \(FreeTierPolicy.freeSiteLimit) sites at a time. \(remainingFreeSites) left."
+            : "You are using both free sites. Unlock the rest with Quiet Pro."
     }
 
     @ViewBuilder
@@ -64,17 +88,22 @@ struct RuleEditorView: View {
         )
 
         Toggle(isOn: binding(for: feature)) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(feature.name)
-                if let summary = feature.summary {
-                    Text(summary)
+            HStack(spacing: 6) {
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(feature.name)
+                    if let summary = feature.summary {
+                        Text(summary)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                // A lock rather than a sentence per row. The explanation is identical on
+                // every locked row, so repeating it turned the list into a wall of orange.
+                if !allowed {
+                    Image(systemName: "lock.fill")
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                }
-                if !allowed {
-                    Text("Needs Quiet Pro: you are using your \(FreeTierPolicy.freeSiteLimit) free sites.")
-                        .font(.caption)
-                        .foregroundStyle(.orange)
+                        .help("Needs Quiet Pro: you are already using your \(FreeTierPolicy.freeSiteLimit) free sites.")
                 }
             }
         }
@@ -108,12 +137,16 @@ enum RuleEditorLoader {
         return ruleset
     }
 
-    static func makeView(purchases: PurchaseModel) -> RuleEditorView? {
+    static func makeView(
+        purchases: PurchaseModel,
+        onShowPro: @escaping () -> Void = {}
+    ) -> RuleEditorView? {
         guard let ruleset = loadRuleset() else { return nil }
         return RuleEditorView(
             ruleset: ruleset,
             initialPreferences: SharedStateStore.load().preferences,
-            purchases: purchases
+            purchases: purchases,
+            onShowPro: onShowPro
         )
     }
 }
