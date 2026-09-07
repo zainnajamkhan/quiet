@@ -36,11 +36,65 @@
     }
   }
 
+  const BLOCK_ELEMENT_ID = "quiet-blocked-overlay";
+
+  function showBlockOverlay() {
+    if (document.getElementById(BLOCK_ELEMENT_ID)) return;
+    const parent = document.body || document.documentElement;
+    if (!parent) return;
+
+    const overlay = document.createElement("div");
+    overlay.id = BLOCK_ELEMENT_ID;
+    overlay.setAttribute(
+      "style",
+      [
+        "position:fixed", "inset:0", "z-index:2147483647",
+        "background:#111", "color:#eee",
+        "display:flex", "flex-direction:column",
+        "align-items:center", "justify-content:center",
+        "font:16px/1.5 -apple-system,system-ui,sans-serif",
+        "text-align:center", "padding:2rem",
+      ].join(";")
+    );
+
+    const heading = document.createElement("div");
+    heading.textContent = "Blocked by Quiet";
+    heading.setAttribute("style", "font-size:22px;font-weight:600;margin-bottom:8px");
+
+    const detail = document.createElement("div");
+    detail.textContent = window.location.hostname + " is on your blocked list.";
+    detail.setAttribute("style", "opacity:0.75");
+
+    overlay.appendChild(heading);
+    overlay.appendChild(detail);
+    parent.appendChild(overlay);
+
+    // Stopping media matters as much as covering the page: audio continuing behind an
+    // overlay would make the block feel broken.
+    document.querySelectorAll("video, audio").forEach(function (el) {
+      try { el.pause(); } catch (_) {}
+    });
+  }
+
+  function removeBlockOverlay() {
+    const existing = document.getElementById(BLOCK_ELEMENT_ID);
+    if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
+  }
+
   function evaluate() {
     if (!state || !state.ruleset) {
       applyStylesheet("");
+      removeBlockOverlay();
       return;
     }
+
+    if (QuietRules.isHostBlocked(window.location.hostname, state.blockedHosts)) {
+      applyStylesheet("");
+      showBlockOverlay();
+      return;
+    }
+    removeBlockOverlay();
+
     const href = window.location.href;
     const site = QuietRules.siteForURL(state.ruleset, href);
     if (!site) {

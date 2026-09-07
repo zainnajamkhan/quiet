@@ -15,9 +15,28 @@ import Foundation
 public struct SharedState: Codable, Equatable, Sendable {
     public let preferences: [String: Bool]
 
-    public init(preferences: [String: Bool] = [:]) {
+    /// Hosts the extension should refuse right now, already resolved against schedules and
+    /// any running session by the native app. Deliberately a flat list: the extension has
+    /// no clock of its own to trust and no reason to reimplement schedule evaluation.
+    public let blockedHosts: [String]
+
+    public init(preferences: [String: Bool] = [:], blockedHosts: [String] = []) {
         self.preferences = preferences
+        self.blockedHosts = blockedHosts
     }
 
     public static let empty = SharedState()
+
+    private enum CodingKeys: String, CodingKey {
+        case preferences
+        case blockedHosts
+    }
+
+    /// Decodes older files written before blockedHosts existed, so an app update never
+    /// starts by throwing away the user's settings.
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        preferences = try container.decodeIfPresent([String: Bool].self, forKey: .preferences) ?? [:]
+        blockedHosts = try container.decodeIfPresent([String].self, forKey: .blockedHosts) ?? []
+    }
 }

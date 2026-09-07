@@ -60,3 +60,24 @@ import Testing
     try SharedStateStore.save(SharedState(preferences: ["c.d": false]), to: url)
     #expect(SharedStateStore.load(from: url) == SharedState(preferences: ["c.d": false]))
 }
+
+@Test func sharedStateCarriesBlockedHosts() throws {
+    let original = SharedState(preferences: ["a.b": true], blockedHosts: ["youtube.com"])
+    let decoded = try JSONDecoder().decode(SharedState.self, from: JSONEncoder().encode(original))
+    #expect(decoded == original)
+    #expect(decoded.blockedHosts == ["youtube.com"])
+}
+
+@Test func sharedStateDecodesOlderFilesWithoutBlockedHosts() throws {
+    // A file written before blockedHosts existed must still load, rather than wiping the
+    // user's preferences on first launch after an update.
+    let legacy = Data(#"{"preferences":{"youtube.comments":false}}"#.utf8)
+    let decoded = try JSONDecoder().decode(SharedState.self, from: legacy)
+    #expect(decoded.preferences == ["youtube.comments": false])
+    #expect(decoded.blockedHosts.isEmpty)
+}
+
+@Test func sharedStateDecodesAnEmptyObject() throws {
+    let decoded = try JSONDecoder().decode(SharedState.self, from: Data("{}".utf8))
+    #expect(decoded == .empty)
+}

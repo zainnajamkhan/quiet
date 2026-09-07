@@ -35,9 +35,12 @@ async function readStored(key) {
 async function readSharedStateFromNativeApp() {
   try {
     const response = await api.runtime.sendNativeMessage("quiet", { type: "quiet.getSharedState" });
-    return (response && response.preferences) || {};
+    return {
+      preferences: (response && response.preferences) || {},
+      blockedHosts: (response && response.blockedHosts) || [],
+    };
   } catch (_) {
-    return {};
+    return { preferences: {}, blockedHosts: [] };
   }
 }
 
@@ -45,7 +48,8 @@ async function buildState() {
   const bundled = await readBundledRuleset();
   const remote = await readStored(STORAGE_KEY_REMOTE_RULESET);
   const localPreferences = (await readStored(STORAGE_KEY_PREFERENCES)) || {};
-  const nativePreferences = await readSharedStateFromNativeApp();
+  const native = await readSharedStateFromNativeApp();
+  const nativePreferences = native.preferences;
 
   // Native app overrides win over what the extension stored locally, so the container
   // app's settings UI (once it exists) is the source of truth; anything it hasn't
@@ -54,7 +58,13 @@ async function buildState() {
   const preferences = { ...localPreferences, ...nativePreferences };
 
   const chosen = QuietRules.chooseRuleset(bundled, remote);
-  return { ruleset: chosen.ruleset, preferences, source: chosen.source, reason: chosen.reason };
+  return {
+    ruleset: chosen.ruleset,
+    preferences,
+    blockedHosts: native.blockedHosts,
+    source: chosen.source,
+    reason: chosen.reason,
+  };
 }
 
 // Deliberately not cached: the native app can change shared state at any time with no

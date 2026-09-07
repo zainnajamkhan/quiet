@@ -185,8 +185,6 @@
 		};
 		AC298F85304DE9B7003A0093 /* macOS (App) */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = "macOS (App)";
 			sourceTree = "<group>";
 		};
@@ -405,8 +403,8 @@
 			mainGroup = AC298F55304DE9B6003A0093;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "QuietCore" */,
-				722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "IndieKit" */,
+				EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "../Packages/QuietCore" */,
+				722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "../Packages/IndieKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AC298F73304DE9B7003A0093 /* Products */;
@@ -976,11 +974,11 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "IndieKit" */ = {
+		722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "../Packages/IndieKit" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Packages/IndieKit;
 		};
-		EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "QuietCore" */ = {
+		EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "../Packages/QuietCore" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Packages/QuietCore;
 		};
@@ -989,32 +987,32 @@
 /* Begin XCSwiftPackageProductDependency section */
 		0D5E79A5B360742653F5EA79 /* IndieKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "IndieKit" */;
+			package = 722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "../Packages/IndieKit" */;
 			productName = IndieKit;
 		};
 		10B6406459E92325CB4FF157 /* QuietCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "QuietCore" */;
+			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "../Packages/QuietCore" */;
 			productName = QuietCore;
 		};
 		9704EE3B4D2426EE434FE056 /* QuietCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "QuietCore" */;
+			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "../Packages/QuietCore" */;
 			productName = QuietCore;
 		};
 		A986A9D5AB4046F6F7BBE3A7 /* IndieKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "IndieKit" */;
+			package = 722C1FF0E95C0717771ED168 /* XCLocalSwiftPackageReference "../Packages/IndieKit" */;
 			productName = IndieKit;
 		};
 		ECECF32D9AA2D828697A1867 /* QuietCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "QuietCore" */;
+			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "../Packages/QuietCore" */;
 			productName = QuietCore;
 		};
 		F03D0E6621DE3C5E2B94F2AC /* QuietCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "QuietCore" */;
+			package = EDEFA45E395AB030CB5CD14B /* XCLocalSwiftPackageReference "../Packages/QuietCore" */;
 			productName = QuietCore;
 		};
 /* End XCSwiftPackageProductDependency section */

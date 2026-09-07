@@ -234,6 +234,21 @@
 
   // Decide which of the bundled and the remotely fetched ruleset to use. The bundled copy
   // always wins unless the remote one is valid, understands the same schema, and is newer.
+  // Mirrors HostPattern.matches in QuietCore: the domain itself and any subdomain, never a
+  // lookalike such as notreddit.com for reddit.com.
+  function isHostBlocked(host, blockedHosts) {
+    if (typeof host !== "string" || !Array.isArray(blockedHosts)) return false;
+    var normalised = host.trim().toLowerCase();
+    if (normalised.endsWith(".")) normalised = normalised.slice(0, -1);
+    if (!normalised) return false;
+    return blockedHosts.some(function (blocked) {
+      if (typeof blocked !== "string") return false;
+      var domain = blocked.trim().toLowerCase();
+      if (!domain) return false;
+      return normalised === domain || normalised.endsWith("." + domain);
+    });
+  }
+
   function chooseRuleset(bundled, remote) {
     const bundledCheck = validateRuleset(bundled);
     if (!bundledCheck.ok) {
@@ -264,6 +279,7 @@
     parseMatchPattern,
     matchesPattern,
     validateRuleset,
+    isHostBlocked,
     siteForURL,
     activeFeatures,
     buildStylesheet,

@@ -45,7 +45,11 @@ class SafariWebExtensionHandler: NSObject, NSExtensionRequestHandling {
         else {
             return [ "echo": message as Any ]
         }
-        return [ "preferences": SharedStateStore.load().preferences ]
+        let state = SharedStateStore.load()
+        return [
+            "preferences": state.preferences,
+            "blockedHosts": state.blockedHosts,
+        ]
     }
 
 }

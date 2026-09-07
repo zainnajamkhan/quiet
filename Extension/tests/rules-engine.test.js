@@ -9,6 +9,7 @@ const {
   parseMatchPattern,
   matchesPattern,
   validateRuleset,
+  isHostBlocked,
   siteForURL,
   activeFeatures,
   buildStylesheet,
@@ -329,4 +330,28 @@ test("a remote ruleset cannot smuggle a stylesheet escape past the engine", () =
 
 test("the supported schema version is pinned", () => {
   assert.equal(SUPPORTED_SCHEMA_VERSION, 1);
+});
+
+test("isHostBlocked matches the domain and its subdomains", () => {
+  const blocked = ["reddit.com", "youtube.com"];
+  assert.equal(isHostBlocked("reddit.com", blocked), true);
+  assert.equal(isHostBlocked("old.reddit.com", blocked), true);
+  assert.equal(isHostBlocked("www.youtube.com", blocked), true);
+  assert.equal(isHostBlocked("REDDIT.COM", blocked), true);
+  assert.equal(isHostBlocked("reddit.com.", blocked), true, "a trailing dot is still the same host");
+});
+
+test("isHostBlocked does not match lookalike domains", () => {
+  const blocked = ["reddit.com"];
+  assert.equal(isHostBlocked("notreddit.com", blocked), false);
+  assert.equal(isHostBlocked("reddit.com.evil.test", blocked), false);
+  assert.equal(isHostBlocked("wikipedia.org", blocked), false);
+});
+
+test("isHostBlocked handles junk input without throwing", () => {
+  assert.equal(isHostBlocked("", ["reddit.com"]), false);
+  assert.equal(isHostBlocked(null, ["reddit.com"]), false);
+  assert.equal(isHostBlocked("reddit.com", null), false);
+  assert.equal(isHostBlocked("reddit.com", []), false);
+  assert.equal(isHostBlocked("reddit.com", [null, "", "reddit.com"]), true);
 });

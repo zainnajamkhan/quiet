@@ -20,13 +20,7 @@
   "content_scripts": [
     {
       "matches": [
-        "*://*.youtube.com/*",
-        "*://*.x.com/*",
-        "*://*.twitter.com/*",
-        "*://*.instagram.com/*",
-        "*://*.reddit.com/*",
-        "*://*.linkedin.com/*",
-        "*://*.facebook.com/*"
+        "*://*/*"
       ],
       "js": [
         "rules-engine.js",
@@ -41,12 +35,6 @@
     "nativeMessaging"
   ],
   "host_permissions": [
-    "*://*.youtube.com/*",
-    "*://*.x.com/*",
-    "*://*.twitter.com/*",
-    "*://*.instagram.com/*",
-    "*://*.reddit.com/*",
-    "*://*.linkedin.com/*",
-    "*://*.facebook.com/*"
+    "*://*/*"
   ]
 }
