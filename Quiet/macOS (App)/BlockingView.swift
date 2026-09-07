@@ -217,6 +217,11 @@ struct BlockingView: View {
         }
     }
 
+    /// Applied to the individual sections rather than to the List, because disabling the
+    /// List disables its scrolling too: the content is taller than the window, so a locked
+    /// Block tab could not be scrolled at all and the lower half was unreachable.
+    private var isLocked: Bool { !purchases.isPro }
+
     var body: some View {
         List {
             if !purchases.isPro {
@@ -242,6 +247,7 @@ struct BlockingView: View {
                         }
                     }
                 }
+                .disabled(isLocked)
             }
 
             Section("Blocked websites") {
@@ -266,6 +272,7 @@ struct BlockingView: View {
                     }
                 }
             }
+            .disabled(isLocked)
 
             Section("Blocked apps") {
                 Button("Choose Apps…") { model.chooseApplications() }
@@ -284,6 +291,7 @@ struct BlockingView: View {
                     }
                 }
             }
+            .disabled(isLocked)
 
             Section("When to block") {
                 Picker("Block", selection: Binding(
@@ -299,6 +307,7 @@ struct BlockingView: View {
                     focusStatus
                 }
             }
+            .disabled(isLocked)
 
             Section("Focus") {
                 if model.blocksAlways {
@@ -339,6 +348,7 @@ struct BlockingView: View {
 
                 Button("Open Focus Settings…") { model.openFocusSettings() }
             }
+            .disabled(isLocked)
 
             Section {
                 Text("Blocked apps are hidden when they open, not force quit: macOS does not let a sandboxed app quit another one. A determined user can still reopen them.")
@@ -347,6 +357,5 @@ struct BlockingView: View {
             }
         }
         .frame(minWidth: 460, minHeight: 420)
-        .disabled(!purchases.isPro)
     }
 }

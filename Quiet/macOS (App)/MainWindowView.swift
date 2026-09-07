@@ -60,6 +60,10 @@ struct MainWindowView: View {
             BlockingView(model: blockingModel, purchases: purchases, focus: focus)
                 .tabItem { Label("Block", systemImage: "hand.raised") }
         }
-        .frame(minWidth: 520, minHeight: 460)
+        // NSHostingView sizes the window from this frame, not from the window's own
+        // contentRect, so the opening size is set here. Ideal rather than minimum: the
+        // Block tab wants the height, but forcing it as a floor would make the window
+        // unshrinkable on a small display.
+        .frame(minWidth: 520, idealWidth: 560, minHeight: 440, idealHeight: 660)
     }
 }
