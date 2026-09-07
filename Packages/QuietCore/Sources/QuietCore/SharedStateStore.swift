@@ -18,7 +18,16 @@ import Foundation
 /// shared writable location available to both.
 public enum SharedStateStore {
 
-    public static let appGroupIdentifier = "CU82DCKHTL.group.com.app.Quiet"
+    /// App Group identifiers follow different conventions per platform: macOS requires the
+    /// team identifier as a prefix, iOS does not. Getting this wrong yields a nil container
+    /// and silently unshared state, which is exactly the bug this type exists to prevent.
+    public static let appGroupIdentifier: String = {
+        #if os(macOS)
+        return "CU82DCKHTL.group.com.app.Quiet"
+        #else
+        return "group.com.app.Quiet"
+        #endif
+    }()
 
     /// Falls back to the per process Application Support directory if the App Group
     /// container is unavailable. That fallback is deliberately non fatal but it does mean
