@@ -1,11 +1,11 @@
-// Quiet selector check, generated from ruleset v4.
+// Quiet selector check, generated from ruleset v5.
 // Paste into Safari's Web Inspector console (Develop > Show Web Inspector > Console)
 // while on the site you want to check, then read the table.
 (function () {
   var RULESET = {
   "schemaVersion": 1,
-  "rulesetVersion": 4,
-  "updatedAt": "2026-09-07T00:00:00Z",
+  "rulesetVersion": 5,
+  "updatedAt": "2026-09-07",
   "sites": [
     {
       "id": "youtube",
@@ -17,7 +17,7 @@
         {
           "id": "youtube.home-feed",
           "name": "Home page recommendation grid",
-          "summary": "The wall of recommended videos on the YouTube home page. Verified 2026-09-07 on the logged out home page (1 match).",
+          "summary": "The wall of recommended videos on the home page. Search and subscriptions still work.",
           "defaultEnabled": true,
           "appliesTo": [
             "/",
@@ -33,7 +33,7 @@
         {
           "id": "youtube.shorts",
           "name": "Shorts shelves",
-          "summary": "Shorts shelves and Shorts thumbnails. Verified September 2026: YouTube replaced ytd-reel-shelf-renderer with these view-model elements. Verified 2026-09-07 on a search results page (2 shelves, 15 thumbnails).",
+          "summary": "Shorts shelves and Shorts thumbnails, wherever they turn up.",
           "defaultEnabled": true,
           "hide": [
             "grid-shelf-view-model",
@@ -46,7 +46,7 @@
         {
           "id": "youtube.up-next",
           "name": "Up next sidebar",
-          "summary": "The recommended videos column beside a video. Verified 2026-09-07 (1 match).",
+          "summary": "The recommended videos column beside whatever you are watching.",
           "defaultEnabled": false,
           "hide": [
             "ytd-watch-next-secondary-results-renderer"
@@ -65,7 +65,7 @@
           "verify": [
             "ytd-app"
           ],
-          "summary": "Verified 2026-09-07 (1 match)."
+          "summary": "The comment section under a video."
         }
       ]
     },
@@ -80,7 +80,7 @@
         {
           "id": "x.sidebar",
           "name": "Trends and Who to follow sidebar",
-          "summary": "The whole right hand column: trending topics and follow suggestions. NOT YET VERIFIED against a live page: the site requires login. Run Tools/selector-check.js while signed in.",
+          "summary": "The right hand column: trending topics and who to follow.",
           "defaultEnabled": true,
           "hide": [
             "[data-testid=\"sidebarColumn\"]"
@@ -92,7 +92,7 @@
         {
           "id": "x.explore",
           "name": "Explore page contents",
-          "summary": "Blanks out the Explore tab's content so opening it is a dead end. NOT YET VERIFIED against a live page: the site requires login. Run Tools/selector-check.js while signed in.",
+          "summary": "Empties the Explore tab, so opening it is a dead end.",
           "defaultEnabled": false,
           "appliesTo": [
             "/explore*"
@@ -116,7 +116,7 @@
         {
           "id": "linkedin.feed",
           "name": "Home feed",
-          "summary": "The scrolling post feed, leaving messaging, jobs and profiles usable. NOT YET VERIFIED against a live page: the site requires login. Run Tools/selector-check.js while signed in.",
+          "summary": "The scrolling post feed. Messaging, jobs and profiles stay usable.",
           "defaultEnabled": true,
           "appliesTo": [
             "/feed*",
@@ -134,7 +134,7 @@
         {
           "id": "linkedin.news",
           "name": "LinkedIn News and suggestions rail",
-          "summary": "The right hand column with news and 'Add to your feed'. NOT YET VERIFIED against a live page: the site requires login. Run Tools/selector-check.js while signed in.",
+          "summary": "The right hand column with LinkedIn News and feed suggestions.",
           "defaultEnabled": true,
           "hide": [
             "aside.scaffold-layout__aside"
@@ -155,7 +155,7 @@
         {
           "id": "reddit.home-feed",
           "name": "Home feed",
-          "summary": "The front page post list. Individual subreddits stay browsable. NOT YET VERIFIED against a live page: the site requires login. Run Tools/selector-check.js while signed in.",
+          "summary": "The front page post list. Individual subreddits stay browsable.",
           "defaultEnabled": true,
           "appliesTo": [
             "/",
@@ -180,7 +180,7 @@
           "verify": [
             "shreddit-app"
           ],
-          "summary": "NOT YET VERIFIED against a live page: the site requires login. Run Tools/selector-check.js while signed in."
+          "summary": "The related posts pulled in under a thread."
         }
       ]
     },
@@ -194,7 +194,7 @@
         {
           "id": "instagram.reels-nav",
           "name": "Reels navigation link",
-          "summary": "Removes the Reels entry point from the sidebar. Verified 2026-09-07 by the user in Safari (1 match).",
+          "summary": "The Reels link in the navigation sidebar.",
           "defaultEnabled": true,
           "hide": [
             "a[href=\"/reels/\"]"
@@ -213,7 +213,7 @@
           "verify": [
             "nav"
           ],
-          "summary": "Verified 2026-09-07 by the user in Safari (1 match)."
+          "summary": "The Explore link in the navigation sidebar."
         }
       ]
     },
@@ -227,7 +227,7 @@
         {
           "id": "facebook.feed",
           "name": "News feed",
-          "summary": "The main scrolling feed on the home page. NOT YET VERIFIED against a live page: the site requires login. Run Tools/selector-check.js while signed in.",
+          "summary": "The main scrolling news feed on the home page.",
           "defaultEnabled": true,
           "appliesTo": [
             "/",
@@ -251,7 +251,7 @@
           "verify": [
             "[role=\"banner\"]"
           ],
-          "summary": "NOT YET VERIFIED against a live page: the site requires login. Run Tools/selector-check.js while signed in."
+          "summary": "The Reels and Marketplace links in the navigation."
         }
       ]
     }

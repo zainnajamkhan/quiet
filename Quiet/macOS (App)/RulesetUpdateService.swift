@@ -29,9 +29,9 @@ protocol RulesetSource: Sendable {
 /// degrade, so the nil check below is load bearing and not defensive noise.
 struct CloudKitRulesetSource: RulesetSource {
 
-    static let containerIdentifier: String? = nil
+    nonisolated static let containerIdentifier: String? = nil
 
-    static let recordType = "Ruleset"
+    nonisolated static let recordType = "Ruleset"
 
     let containerIdentifier: String
 
@@ -70,7 +70,7 @@ struct CloudKitRulesetSource: RulesetSource {
 /// whether it is safe to run.
 struct HTTPRulesetSource: RulesetSource {
 
-    static let url: URL? = URL(string: "https://zainnajamkhan.github.io/quiet-rules/ruleset.json")
+    nonisolated static let url: URL? = URL(string: "https://zainnajamkhan.github.io/quiet-rules/ruleset.json")
 
     let url: URL
 

@@ -13,7 +13,6 @@ struct RuleEditorView: View {
 
     let ruleset: Ruleset
     @ObservedObject var purchases: PurchaseModel
-    @ObservedObject var updates: RulesetUpdateService
     var onShowPro: () -> Void = {}
 
     @State private var preferences: [String: Bool]
@@ -22,12 +21,10 @@ struct RuleEditorView: View {
         ruleset: Ruleset,
         initialPreferences: [String: Bool],
         purchases: PurchaseModel,
-        updates: RulesetUpdateService,
         onShowPro: @escaping () -> Void = {}
     ) {
         self.ruleset = ruleset
         self.purchases = purchases
-        self.updates = updates
         self.onShowPro = onShowPro
         _preferences = State(initialValue: initialPreferences)
     }
@@ -70,37 +67,8 @@ struct RuleEditorView: View {
                     }
                 }
 
-                rulesFooter
             }
             .formStyle(.grouped)
-        }
-    }
-
-    /// Rules are data, not code, so they can be fixed without an App Store release. This
-    /// says which version is actually running, because "the site changed and Quiet stopped
-    /// working" and "Quiet has not picked up the fix yet" look identical from the outside.
-    private var rulesFooter: some View {
-        Section("Rules") {
-            LabeledContent("Version") {
-                Text(updates.effectiveRulesetVersion.map(String.init) ?? "unknown")
-                    .monospacedDigit()
-            }
-
-            if updates.isConfigured {
-                HStack {
-                    Text(updates.state.lastResult ?? "Not checked yet")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Spacer()
-                    Button("Check Now") { Task { await updates.check() } }
-                        .controlSize(.small)
-                        .disabled(updates.isChecking)
-                }
-            } else {
-                Text("Using the rules that shipped with this version of Quiet.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
         }
     }
 

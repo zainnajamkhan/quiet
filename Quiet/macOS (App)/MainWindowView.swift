@@ -27,6 +27,7 @@ struct MainWindowView: View {
         case hide
         case block
         case pro
+        case help
 
         var id: String { rawValue }
 
@@ -35,6 +36,7 @@ struct MainWindowView: View {
             case .hide: "Hide"
             case .block: "Block"
             case .pro: "Quiet Pro"
+            case .help: "Help"
             }
         }
 
@@ -43,6 +45,7 @@ struct MainWindowView: View {
             case .hide: "eye.slash"
             case .block: "hand.raised"
             case .pro: "sparkles"
+            case .help: "questionmark.circle"
             }
         }
 
@@ -51,6 +54,7 @@ struct MainWindowView: View {
             case .hide: "Trim the noise out of sites"
             case .block: "Keep sites and apps shut"
             case .pro: "One payment, everything on"
+            case .help: "Version, rules and support"
             }
         }
     }
@@ -105,7 +109,6 @@ struct MainWindowView: View {
                     ruleset: ruleset,
                     initialPreferences: SharedStateStore.load().preferences,
                     purchases: purchases,
-                    updates: updates,
                     onShowPro: { screen = .pro }
                 )
             } else {
@@ -121,6 +124,9 @@ struct MainWindowView: View {
 
         case .pro:
             ProScreen(purchases: purchases)
+
+        case .help:
+            HelpView(updates: updates)
         }
     }
 }
@@ -135,15 +141,14 @@ struct ProScreen: View {
         ScrollView {
             VStack(spacing: 18) {
                 if purchases.isPro {
-                    VStack(spacing: 10) {
-                        Image(systemName: "checkmark.seal.fill")
-                            .font(.system(size: 44))
-                            .foregroundStyle(.green)
-                        Text("You have Quiet Pro")
-                            .font(.title2.weight(.semibold))
+                    // Deliberately plain. A large seal badge here read as the app
+                    // congratulating itself for having been paid for.
+                    VStack(spacing: 6) {
+                        Text("Quiet Pro is active")
+                            .font(.title3.weight(.medium))
                         Text("Everything is unlocked.")
+                            .font(.callout)
                             .foregroundStyle(.secondary)
-                            .multilineTextAlignment(.center)
                     }
                     .padding(.top, 40)
                 } else {
