@@ -16,6 +16,10 @@ for file in background.js content.js rules-engine.js schedule-engine.js manifest
     DRIFTED=1
   fi
 done
+if ! diff -rq "Extension/Resources/images" "Quiet/Shared (Extension)/Resources/images" >/dev/null 2>&1; then
+  echo "  DRIFTED: the extension icon set differs from the copy that ships"
+  DRIFTED=1
+fi
 if ! diff -q "Extension/Resources/ruleset.json" "Quiet/macOS (App)/Resources/ruleset.json" >/dev/null 2>&1; then
   echo "  DRIFTED: ruleset.json differs from the copy the app reads"
   DRIFTED=1

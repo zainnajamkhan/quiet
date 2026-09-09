@@ -24,6 +24,11 @@ for file in background.js content.js rules-engine.js schedule-engine.js manifest
   echo "  -> $EXTENSION/$file"
 done
 
+# The icon set is a directory, and it was missed the first time round: the extension
+# shipped Xcode's template icons for months because they only ever existed in the copy.
+rsync -a --delete "$SOURCE/images/" "$EXTENSION/images/"
+echo "  -> $EXTENSION/images/"
+
 cp "$SOURCE/ruleset.json" "$APP/ruleset.json"
 echo "  -> $APP/ruleset.json"
 

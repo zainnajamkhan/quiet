@@ -195,6 +195,38 @@ These transfer to the other apps. None of them are in the obvious documentation.
 - CloudKit needs the iCloud entitlement, which needs the paid membership. Plain HTTPS from
   any static host is testable today and is what Quiet actually uses.
 
+### StoreKit, again
+
+- After a successful purchase, **do not re-query `Transaction.currentEntitlements` to decide
+  whether the user is now entitled.** It can answer from a stale cache immediately after
+  `finish()`, which shows a paywall to somebody who has just paid, with no way forward but
+  relaunching. Grant from the transaction you just verified. Keep the
+  `Transaction.updates` listener and the launch check as the authority for refunds.
+
+### Free tiers must start inside their own limit
+
+Quiet shipped six sites switched on by default against a two site free limit. Every new
+free user was four sites over, so the check that decides whether a rule may be switched on
+refused every switched-off rule. The app became one way: you could turn something off and
+never turn it back on, and buying Pro was the only escape.
+
+Nothing was wrong with the policy code. The defaults simply violated it on install. There
+is now a test that loads the **shipped** ruleset and asserts a fresh install fits inside the
+free tier, and a second that asserts anything switchable off is switchable back on.
+
+**The general lesson: test the limits against the data you actually ship, not against a
+fixture.** A fixture with two sites passes happily while the real file has six.
+
+### Extension icons are not the app icon
+
+A Safari web extension has its own icons in `Resources/images/`, referenced from
+`manifest.json`. Setting the app icon in the asset catalog does nothing for them, so Safari
+kept showing Xcode's template icon for months. They also live outside the asset catalog, so
+any script that syncs resources has to copy the directory too.
+
+The template also ships `popup.html`, `popup.css`, `popup.js` and `toolbar-icon.svg`. If the
+manifest has no `action`, none of them are referenced and all of them are shipping dead.
+
 ### Focus modes (feature was cut, research still valid)
 
 - No API tells you which named Focus is running.

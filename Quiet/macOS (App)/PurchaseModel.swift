@@ -35,6 +35,7 @@ final class PurchaseModel: ObservableObject {
             for await update in Transaction.updates {
                 guard let self else { return }
                 if case .verified(let transaction) = update {
+                    await self.apply(transaction)
                     await transaction.finish()
                 }
                 await self.refreshEntitlements()
@@ -63,6 +64,15 @@ final class PurchaseModel: ObservableObject {
         }
     }
 
+    /// Records entitlement from a single transaction. Only ever grants: a lone transaction
+    /// is evidence that something was bought, never evidence that nothing else was.
+    private func apply(_ transaction: Transaction) {
+        guard transaction.productID == Self.productIdentifier else { return }
+        if transaction.revocationDate == nil {
+            isPro = true
+        }
+    }
+
     func refreshEntitlements() async {
         var entitled = false
         for await result in Transaction.currentEntitlements {
@@ -88,8 +98,14 @@ final class PurchaseModel: ObservableObject {
             switch result {
             case .success(let verification):
                 if case .verified(let transaction) = verification {
+                    // Trust the transaction that was just verified rather than asking
+                    // Transaction.currentEntitlements what it thinks. That query can still
+                    // be answering from a stale cache immediately after a purchase, which
+                    // leaves the app showing a paywall to somebody who has just paid, with
+                    // no way forward but relaunching. The listener in init() and the check
+                    // at launch remain the authority for refunds and other devices.
+                    apply(transaction)
                     await transaction.finish()
-                    await refreshEntitlements()
                 } else {
                     lastError = "That purchase could not be verified."
                 }

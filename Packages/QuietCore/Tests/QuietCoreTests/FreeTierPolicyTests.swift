@@ -113,3 +113,70 @@ private func feature(_ id: String, in ruleset: Ruleset) -> (Feature, Site) {
         feature: gammaOne, in: gammaSite, ruleset: defaultsOn, preferences: [:], isPro: false
     ))
 }
+
+// MARK: - The ruleset that actually ships
+
+private func shippedRuleset() throws -> Ruleset {
+    let root = URL(fileURLWithPath: #filePath)
+        .deletingLastPathComponent().deletingLastPathComponent()
+        .deletingLastPathComponent().deletingLastPathComponent()
+        .deletingLastPathComponent()
+    let url = root
+        .appendingPathComponent("Extension")
+        .appendingPathComponent("Resources")
+        .appendingPathComponent("ruleset.json")
+    return try Ruleset.decode(from: try Data(contentsOf: url))
+}
+
+@Test func aFreshInstallStartsInsideTheFreeTier() throws {
+    // This shipped broken. Six sites were switched on by default against a two site free
+    // limit, so a new free user was already four sites over. canEnable() then refused every
+    // switched-off toggle, and the app became one way: you could turn a rule off and never
+    // turn it back on.
+    let ruleset = try shippedRuleset()
+    let inUse = FreeTierPolicy.sitesInUse(ruleset: ruleset, preferences: [:])
+
+    #expect(
+        inUse.count <= FreeTierPolicy.freeSiteLimit,
+        "a fresh install uses \(inUse.count) sites against a limit of \(FreeTierPolicy.freeSiteLimit): \(inUse.sorted())"
+    )
+}
+
+@Test func aFreeUserCanAlwaysTurnASwitchedOffRuleBackOn() throws {
+    // The trap was not the limit itself but that it could not be escaped. Starting from the
+    // shipped defaults, switching a rule off must leave the user able to switch it on again.
+    let ruleset = try shippedRuleset()
+    var preferences: [String: Bool] = [:]
+
+    for site in ruleset.sites {
+        for feature in site.features where FeatureResolution.isEnabled(feature, preferences: preferences) {
+            preferences[feature.id] = false
+            #expect(
+                FreeTierPolicy.canEnable(
+                    feature: feature, in: site, ruleset: ruleset,
+                    preferences: preferences, isPro: false
+                ),
+                "\(feature.id) could be switched off but not back on"
+            )
+            preferences[feature.id] = true
+        }
+    }
+}
+
+@Test func buyingProUnlocksEveryFeatureRegardlessOfWhatIsOn() throws {
+    let ruleset = try shippedRuleset()
+    // Everything switched off, which is the worst case for the free tier counter.
+    var preferences: [String: Bool] = [:]
+    for site in ruleset.sites {
+        for feature in site.features { preferences[feature.id] = false }
+    }
+
+    for site in ruleset.sites {
+        for feature in site.features {
+            #expect(FreeTierPolicy.canEnable(
+                feature: feature, in: site, ruleset: ruleset,
+                preferences: preferences, isPro: true
+            ), "\(feature.id) stayed locked for a paying customer")
+        }
+    }
+}

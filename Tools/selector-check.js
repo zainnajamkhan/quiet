@@ -1,11 +1,11 @@
-// Quiet selector check, generated from ruleset v5.
+// Quiet selector check, generated from ruleset v6.
 // Paste into Safari's Web Inspector console (Develop > Show Web Inspector > Console)
 // while on the site you want to check, then read the table.
 (function () {
   var RULESET = {
   "schemaVersion": 1,
-  "rulesetVersion": 5,
-  "updatedAt": "2026-09-07",
+  "rulesetVersion": 6,
+  "updatedAt": "2026-09-10",
   "sites": [
     {
       "id": "youtube",
@@ -81,7 +81,7 @@
           "id": "x.sidebar",
           "name": "Trends and Who to follow sidebar",
           "summary": "The right hand column: trending topics and who to follow.",
-          "defaultEnabled": true,
+          "defaultEnabled": false,
           "hide": [
             "[data-testid=\"sidebarColumn\"]"
           ],
@@ -117,7 +117,7 @@
           "id": "linkedin.feed",
           "name": "Home feed",
           "summary": "The scrolling post feed. Messaging, jobs and profiles stay usable.",
-          "defaultEnabled": true,
+          "defaultEnabled": false,
           "appliesTo": [
             "/feed*",
             "/",
@@ -135,7 +135,7 @@
           "id": "linkedin.news",
           "name": "LinkedIn News and suggestions rail",
           "summary": "The right hand column with LinkedIn News and feed suggestions.",
-          "defaultEnabled": true,
+          "defaultEnabled": false,
           "hide": [
             "aside.scaffold-layout__aside"
           ],
@@ -156,7 +156,7 @@
           "id": "reddit.home-feed",
           "name": "Home feed",
           "summary": "The front page post list. Individual subreddits stay browsable.",
-          "defaultEnabled": true,
+          "defaultEnabled": false,
           "appliesTo": [
             "/",
             "/?*"
@@ -195,7 +195,7 @@
           "id": "instagram.reels-nav",
           "name": "Reels navigation link",
           "summary": "The Reels link in the navigation sidebar.",
-          "defaultEnabled": true,
+          "defaultEnabled": false,
           "hide": [
             "a[href=\"/reels/\"]"
           ],
@@ -206,7 +206,7 @@
         {
           "id": "instagram.explore-nav",
           "name": "Explore navigation link",
-          "defaultEnabled": true,
+          "defaultEnabled": false,
           "hide": [
             "a[href=\"/explore/\"]"
           ],
@@ -228,7 +228,7 @@
           "id": "facebook.feed",
           "name": "News feed",
           "summary": "The main scrolling news feed on the home page.",
-          "defaultEnabled": true,
+          "defaultEnabled": false,
           "appliesTo": [
             "/",
             "/?*"
